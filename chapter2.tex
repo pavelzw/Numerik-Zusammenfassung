@@ -1,0 +1,303 @@
+\section{Numerische Integration}
+
+\subsection*{Quadraturformeln}
+
+\begin{karte}{Eigeschaften des Integrals}
+    Das Integral als Abbildung \( \abb{I}{\mathcal{C}^0([a,b])}{\R}, f \mapsto I(f) \) ist 
+    eine additive, positive Linearform:
+    
+    \begin{description}
+        \item[linear:] \( I(\alpha f + \beta g) = \alpha I(f) + \beta I(g) \),
+        \item[positiv:] \( f\geq 0 \Rightarrow I(f) \geq 0\),
+        \item[additiv:] \( I_a^b(f) = I_a^\tau(f) + I_\tau^b(f) \).
+    \end{description}
+\end{karte}
+
+\begin{karte}{Kondition der Quadraturaufgabe}
+    Die \textit{Kondition der Quadraturaufgabe} \( (I,f), I(f) = \int_a^b f(x) \dx{x} \) 
+    bzgl. der \( L^1 \)-Norm (\( ||f||_1 \int_a^b |f(t) | \dx{t} \)) auf \( \mathcal{C}^0([a,b]) \) 
+    ist 
+    \[ \kappa(f) = \frac{I(|f|)}{\abs{I(f)}}. \]
+\end{karte}
+
+\begin{karte}{Trapezsumme}
+    Zerlege \( [a,b] \) in \( n \) Teilintervalle \( [t_i, t_{i+1}], i = 0, \ldots, n-1 \) 
+    und definiere die Trapezsumme
+    \[ \widehat{I_n}(f) := \sum_{i=1}^n T_i = \sum_{i=1}^n h_i \frac{f(t_{i-1}) + f(t_i)}{2} \]
+    mit \( h_i = t_i - t_{i-1} \).
+    
+    Es gilt 
+    \[ R_\mathrm{U}^{(n)}(f) \leq \widehat{I_n}(f) \leq R_{\mathrm{O}}^{(n)}(f), \]
+    wobei die beiden Schranken die Riemannsche Unter- bzw. Obersumme bezüglich der Zerlegung sind.
+    Wenn \(f\) stetig, so gilt 
+    \[ \limesx{h}{0} \widehat{I_n}(f) = I(f). \]
+\end{karte}
+
+\begin{karte}{Quadraturformel}
+    Unter einer \textit{Quadraturformel} \( \widehat{I_n}(f) \) zur Berechnung des 
+    bestimmten Integrals \( I(f) \) verstehen wir die Summe 
+    \[ \widehat{I}(f) := (b-a) \sum_{i=0}^n \lambda_i f(t_i) \]
+    mit den \( n+1 \) Knoten \( t_0 < \cdots < t_n \) und den Gewichten \( \lambda_0,\ldots, \lambda_n \), 
+    sodass 
+    \[ \sum_{i=0}^n \lambda_i = 1. \]
+    Dabei ist \( t_0 \neq a \) und \( t_n \neq b \) möglich.
+
+    Es gilt \( \widehat{I}(1) = b-1 \) und \( \widehat{I} \) ist positiv \( \Leftrightarrow \lambda_i \geq 0, i = 0,\ldots, n \).
+\end{karte}
+
+\begin{karte}{Konstruktion von Quadraturformeln}
+    Approximiere \(f\) druch eine Linearkombination einfach integrierbarer Funktionen. 
+    Dazu sei \(f\) an den Stellen \( t_i \) bekannt. Wir setzen 
+    \[ \tilde{f}(t) := \sum_{i=0}^n f(t_i p_i(t)) \]
+    an, wobei \( p_i \) bekannte Stammfunktionen besitzen. Wir setzen 
+    \[ \widehat{I}(f) := I(\tilde{f}) = (b-a)\sum_{i=0}^n f(t_i) \frac{I(p_i)}{b-a}. \]
+    
+    Je besser \(\tilde{f}\) den Integranden \(f\) approximiert, desto genauer wird \( I(f) \) 
+    durch \( \widehat{I}(f) \) angenähert.
+\end{karte}
+
+\subsection*{Newton-Cotes-Formeln}
+
+\begin{karte}{Quadratur durch Polynominterpolation}
+    Wir approximieren \(I(f)\) durch das Interpolationspolynom. 
+    \[ \widehat{I_n}(f) := \int_a^b P(f|t_0,\ldots, t_n)(t) \dx{t} 
+    = (b-a) \sum_{i=0}^n \underbrace{\frac{1}{b-a} \int_a^b L_{n,i}(t) \dx{t} }_{=\lambda_n,i} f(t_i). \]
+
+    \( \lambda_{n,i} \) hängt nur noch von der Wahl der Knoten ab. 
+    \( \widehat{I_n}(f) \) ist exakt für Polynome bis zum Grad \(n\).
+\end{karte}
+
+\begin{karte}{Newton-Cotes-Formeln}
+    Quadraturformeln mit äquidistanten Knoten \( t_i = a + ih \)
+    heißen \textit{Newton-Cotes-Formeln}.
+
+    Hier gilt für die Gewichte 
+    \[ \lambda_{n,i} = \frac{1}{n} \int_0^n \prod_{\substack{j=0\\j\neq i}}^n \frac{s-j}{i-j} \dx{s} \in \Q. \]
+
+    Es gilt für die ersten vier Newton-Cotes-Formeln 
+    \begin{center}
+    \begin{tabular}{c|c|c|c}
+        \(n\) & Gewichte & Fehler & Name \\[10pt]\hline
+        \( 1 \) & \( \frac{1}{2} \qquad \frac{1}{2} \) & \( \frac{h^3}{12} f''(\tau) \) & Trapezregel\\[10pt]
+        \(2\) & \( \frac{1}{6} \quad \frac{4}{6} \quad \frac{1}{6} \) & \( \frac{h^5}{90} f^{(4)}(\tau) \) & Simpson-Regel/Keplersche Faßregel \\[10pt]
+        \(3\) & \( \frac{1}{8} \quad \frac{3}{8} \quad \frac{3}{8} \quad \frac{1}{8} \) & \( \frac{3h^5}{80} f^{(4)}(\tau) \) & Newtonsche 3/8-Regel \\[10pt]
+        \( 4 \) & \( \frac{7}{90} \; \frac{32}{90} \; \frac{12}{90} \; \frac{32}{90} \; \frac{7}{90} \) & \( \frac{8h^7}{945} f^{(6)}(\tau) \) & Milne-Regel
+    \end{tabular}
+    \end{center}
+    
+\end{karte}
+
+\begin{karte}{Newton-Cotes Trapezsumme}
+    Die Trapezsumme mit äquidistanten Knoten erhalten wir, wenn wir die Trapezregel auf die 
+    Teilintervalle \( [t_{i-1}, t_i] \) mit Intervalllänge \( h = \frac{b-a}{n} \) 
+    anwenden und die erzielten Werte aufsummieren:
+
+    \[ T(f,h) := h\left( \frac{f(a) + f(b)}{2} + \sum_{i=1}^{n-1} f(t_i) \right). \]
+
+    Für den Fehler gilt 
+    \[ T(f,h) - I(f) = \frac{b-a}{12} h^2 f''(\tau) \quad (=\mathrm{O}(h^2) \text{ für } h\rightarrow 0). \]
+\end{karte}
+
+\begin{karte}{Zusammengesetzte Simpson-Formel}
+    \( n+1 \) Knoten werden in das Integrationsintervall verteilt, wobei \(n\) gerade ist. \\
+    Auf die Teilintervalle \( [t_{2i}, t_{2i+2}], i = 0,\ldots, n/2-1 \), wenden wir die Simpson-Regel an 
+    und addieren auf 
+    \[ S(f,h) := \sum_{i=0}^{n/2-1} S_i, \]
+    wobei 
+    \[ S_i = \frac{2h}{6} ( f(t_{2i}) + 4f(t_{2i+1}) + f(t_{2i+2}) ). \]
+\end{karte}
+
+\subsection*{Extrapolation Romberg-Quadratur}
+
+\begin{karte}{Euler-Maclaurinsche Summenformel}
+    Asymptotische Entwicklung der Trapezsumme.
+    Sei \(f \in \mathcal{C}^{2m+1}([a,b])\) und sei \( h = (b-a)/n \). Dann gilt 
+    \[ T(f,h) = I(f) + \tau_2 h^2 + \tau_4 h^4 + \cdots + \tau_{2m} h^{2m} + R_{2m+2}(h) h^{2m+2} \]
+    mit den Koeffizienten 
+    \[ \tau_{2k} = \frac{B_{2k}}{(2k)!} \left( f^{(2k-1)}(b) - f^{(2k-1)}(a) \right), \]
+    wobei 
+    \[ B_{2k} = (-1)^{k-1} 2 \frac{(2k)!}{(2\pi)^{2k}} \sum_{j=1}^\infty \frac{1}{j^{2k}} \]
+    die Bernoulli-Zahlen sind. Der Restterm erfüllt die Abschätzung 
+    \[ \abs{ R_{2m+2}\left( \frac{b-a}{n} \right) } \leq C_{2m+2}(b-a) \]
+    mit einer positiven Konstanten \( C_{2m+2} \), die nicht von \(n\) abhängt.
+    Für \( (b-a) \)-periodische \( \mathcal{C}^{2m+1} \)-Funktionen verschwinden alle Koeffizienten 
+    \( \tau_{2k} \) und es gilt \( \abs{ T(f,h) - I(f) } = \mathrm{O}(h^{2m+2}) \) für \(h\rightarrow 0\).
+\end{karte}
+
+\begin{karte}{Romberg-/Extrapolationsverfahren}
+    Wir erhalten für verschiedene \( h_i \) Stützwerte 
+    \[ (h_0^2, T(h_0), \ldots, (h_m^2, T(h_m))). \]
+    Wenn wir diese in einem interpolierenden Polynom bei Null auswerten, bekommen wir 
+    \[ P(T|h_0^2, \ldots, h_m^2)(0) \approx I(f). \]
+
+    Wende das Schema von Neville an (\(t=0\)):
+    \[ T_{i,0} = P(T|h_i^2) = T(h_i), \]
+    \[ T_{i,k} = T_{i,k-1} + \frac{ T_{i,k-1} - T_{i-1,k-1} }{\frac{ h_{i-k}^2 }{h_i^2} - 1} \]
+\end{karte}
+
+\begin{karte}{Fehler Romberg-/Extrapolationsverfahren}
+    Sei die Schrittweite \( \set{h_j}_{j\in\N_0} \) ausgehend von der Grundschrittweite \(h\).
+    Dann gilt 
+    \[ T_{i,k} - I(f) = \frac{ (-1)^k \tau_{2(k+1)} }{ n_{i-k}^2 n_{i-k+1}^2 \cdots n_i^2 } h^{2(k+1)} + \mathrm{O}(h^{2(k+2)}) \]
+    für \( h\rightarrow 0 \) und \( 0 \leq k \leq i \leq m \), falls \(f\) hinreichend glatt über \([a,b]\) ist.
+\end{karte}
+
+\begin{karte}{Folgen für Extrapolationsverfahren}
+    Gebräuchliche Folgen zur Verkleinerung der Grundschrittweite \(h\) sind 
+    \begin{description}
+        \item[Romberg-Folge:] \( h_j = \frac{h_{j-1}}{2} = \frac{h}{2^j} \),
+        \item[Bulirsch-Folge:] \( H_1 = \frac{h}{2}, h_2 = \frac{h}{3}, h_3 = \frac{h}{4}, h_j = \frac{h}{n_j} \) mit \( n_j = 2 \cdot n_{j-2} \).
+    \end{description}
+\end{karte}
+
+\subsection*{Gauß-Quadratur}
+
+\begin{karte}{Integral über Gewichtsfunktion}
+    Betrachten Integrale der Form 
+    \[ I(f) := \int_a^b f(x) w(x) \dx{x}, a,b\in [-\infty, \infty], \]
+    wobei \( w \) eine fast überall positive, stetige \textit{Gewichtsfunktion} ist.
+    Alle Polynome seien gegen \(w\) integrierbar: \( \int_a^b x^k w(x) \dx{x} < \infty \;\forall k\in \N_0 \).
+    
+    Ziel: Konstruktion von Quadraturformeln 
+    \[ \widehat{I_n}(f) = \sum_{i=0}^n \lambda_{n,i} f(\tau_{n,i}), \]
+    die Polynome möglichst hohen Grades exakt integrieren.
+
+    Das Skalarprodukt \((f,g)_w\) ist wie folgt definiert:
+    \[ (f,g)_w := \int_a^b f(x) g(x) w(x) \dx{x}. \]
+\end{karte}
+
+\begin{karte}{3-Term-Rekursion}
+    Zu jeder Gewichtsfunktion \(w\) gibt es eindeutig bestimmte 
+    Orthogonalpolynome \( \set{p_k}_{k\in\N_0}, p_k \in \Pi_k \), 
+    mit führendem Koeffizienten 1, d. h. \( p_k(t) = t^k + \alpha_{k-1}t^{k-1} + \cdots + \alpha_0 \).
+    Sie genügen der Drei-Term-Rekursion 
+    \[ p_k(t) = (t + a_k) p_{k-1}(t) + b_k p_{k-2}(t) \]
+    mit \( p_{-1} = 0, p_0 = 1 \)  und 
+    \[ a_k = -\frac{ (tp_{k-1}, p_{k-1})_w }{ ||p_{k-1}||_w^2 }, \qquad 
+    b_k = - \frac{ ||p_{k-1}||_w^2 }{ || p_{k-2} ||_w^2 }, \quad b_1 = 0. \]
+
+    \( p_k \) hat genau \(k\) einfache Nullstellen in \( (a,b) \).
+\end{karte}
+
+\begin{karte}{Tschebyscheff-Polynome 1. Art}
+    Sei \( w(x) = (1-x^2)^{-1/2} \). 
+    Die Tschebyscheff-Polynome 1. Art erfüllen die Rekursion 
+    \[ T_0(x) = 1, \quad T_1(x) = x, \quad T_k(x) = 2x T_{k-1}(x) - T_{k-2}(x). \]
+    Durch \( p_k := 2^{1-k}T_k, p_0 = T_0 \) erhalten wir die Version der 
+    Tschebyscheff-Polynome mit 3-Term-Rekursion. 
+    Es gilt hierbei \( a_k = 0, b_2 = -\frac{1}{2}, b_k = -\frac{1}{4}, k \geq 3 \).
+\end{karte}
+
+\begin{karte}{Gauß-Quadratur}
+    Es existieren eindeutig bestimmte Knoten \( \tau_{n,0}, \ldots, \tau_{n,n} \) 
+    und positive Integrationsgewichte \( \lambda_{n,0}, \ldots, \lambda_{n,n} \), 
+    sodass die Quadraturformel \( \widehat{I_n}(f) = \sum_{i=0}^n \lambda_{n,i}f(\tau_{n,i}) \)
+    Polynome bis zum Grad \( 2n+1 \) exakt integriert:
+    \[ \widehat{I_n}(p) = \int_a^b p(t) w(t) \dx{t} \quad \text{für alle } p \in \Pi_{2n+1}. \]
+    Die Knoten sind die Nullstellen des \( (n+1) \)-ten Orthogonalpolynoms über 
+    \( [a,b] \) bzgl. \(w\): 
+    \[ p_{n+1} = (t - \tau_{n,0})\cdots (t - \tau_{n,n}) \] 
+    Für die Integrationsgewichte gilt: 
+    \[ \lambda_{n,i} = \int_a^b w(t) L_{n,i}(t) \dx{t} \]
+    mit den Lagrange-Polynomen bzgl. \( \tau_{n,0}, \ldots, \tau_{n,n} \).
+\end{karte}
+
+\begin{karte}{Fehlerabschätzung Gauß-Quadratur}
+    Sei \( f \in \mathcal{C}^{2n+2}([a,b]) \). Dann existiert ein \( \tau \in (a,b) \), 
+    sodass gil t
+    \[ \int_a^b f(t) w(t) \dx{t} - \widehat{I_n}(f) = || p_{n+1} ||_w^2 \frac{ f^{(2n+2)}(\tau) }{ (2n+2)! }. \]
+\end{karte}
+
+\begin{karte}{Gauß-Legendre-Quadratur}
+    Gauß-Quadratur auf dem Intervall \( [-1,1] \) mit dem konstanten Gewicht \( w = 1 \).
+    Die zugehörigen Orthogonalpolynome \( \set{p_k}_{k\in\N_0} \) sind die \textit{Legendre-Polynome}.
+
+    Durch Transformation (\( x = a + \frac{1+t}{2}(b-a) \)) erhalten wir eine Quadraturformel für ein beliebiges endliches 
+    Intervall \( [a,b], -\infty < a < b < \infty \). 
+    \[ \int_a^b f(x) \dx{x} = \frac{b-a}{2} \int_{-1}^1 f\left( a + \frac{ 1+t }{2}(b-a) \right) \dx{t}. \]
+\end{karte}
+
+\begin{karte}{Gebräuchliche Systeme von Orthogonalpolynomen}
+    \begin{center}
+    \begin{tabular}{c|c|c}
+        Intervall & Gewicht & Name \\\hline
+        \( [-1,1] \) & \(1\) & Legendre-Polynome\\[5pt]
+        \( [-1,1] \) & \( (1-x^2)^{-1/2} \) & Tschebyscheff-Polynome 1. Art \\[5pt]
+        \( [-1,1] \) & \( (1-x)^\alpha (1+x)^\beta, \alpha, \beta > -1 \) & Jacobi-Polynome \\[5pt]
+        \( \R \) & \( e^{-x^2} \) & Hermite-Polynome \\[5pt]
+        \( [0,\infty) \) & \( x^\alpha e^{-x^2}, \alpha > -1 \) & Laguerre-Polynome
+    \end{tabular}
+    \end{center}
+\end{karte}
+
+\begin{karte}{Berechnung Integrationsgewichte und Knoten über Matrix Schritt 1}
+    Die Knoten der Quadraturformel lassen sich im Allgemeinen nicht einfach berechnen. 
+    Die 3-Term-Rekursion gibt uns 
+    \[ p_0 = 1, \quad p_1 = t - \beta_1, \quad p_k(t) = (t - \beta_k)p_{k-1}(t) - \gamma_k^2 p_{k-2}(t) \]
+    mit den Koeffizienten 
+    \[ \beta_k = \frac{(tp_{k-1}, p_{k-1})_w}{|| p_{k-1} ||_w^2} \text{ und } \gamma_k = \frac{||p_{k-1}||}{||p_{k-2}||}. \]
+    Wir definieren die symmetrische Tridiagonalmatrix 
+    \[ J := \begin{pmatrix}
+        \beta_1 & -\gamma_2 & 0 & \cdots & 0 \\
+        -\gamma_2 & \beta_2 & -\gamma_3 \ddots & \vdots \\
+        0 & -\gamma_3 & \ddots & \ddots & 0 \\
+        \vdots & \ddots & \ddots & \ddots & -\gamma_{n+1} \\
+        0 & \cdots & 0 & -\gamma_{n+1} & \beta_{n+1}
+    \end{pmatrix} \in \R^{(n+1)\times(n+1)} \]
+\end{karte}
+
+\begin{karte}{Berechnung Integrationsgewichte und Knoten über Matrix Schritt 2}
+    Die Nullstellen \( \tau_{n,0}, \ldots, \tau_{n,n} \) des \( (n+1) \)-ten Orthogonalpolynoms 
+    stimmen mit den Eigenwerten der Matrix \(J\) überein. Für die Integrattionsgewichte \( \lambda_{n,k} \) gilt 
+    \[ \lambda_{n,k} = \frac{ \int_a^b w(t) \dx{t} }{ \sum_{j=0}^n \sigma_j^2 p_j^2(\tau_{n,k}) }, \quad k = 0,\ldots, n, \]
+    mit den Zahlen 
+    \[ \sigma_j := \begin{cases}
+        1, & j = 0\\
+        \frac{(-1)^j}{ \gamma_2 \gamma_3 \cdots \gamma_{n+1} }, & j = 1,\ldots, n.
+    \end{cases} \]
+\end{karte}
+
+\subsection*{Konvergenz Quadraturverfahren}
+
+\begin{karte}{Konvergenz von Quadraturformeln}
+    Eine Folge von Quadraturformeln \( \set{\widehat{I_n}}_{n\in\N}, \abb{\widehat{I_n}}{\mathcal{C}^0([a,b])}{\R} \), 
+    heißt \textit{konvergent}, falls 
+    \[ \limes{n} \widehat{I_n}(f) = I(f) \quad \text{für jedes } f \in \mathcal{C^0}([a,b]) \text{ ist}. \]
+\end{karte}
+
+\begin{karte}{Konvergenz von interpolatorischen Quadraturformeln}
+    Eine Folge \( \set{\widehat{I_n}}_{n\in\N} \) von interpolatorischen Quadraturformeln 
+    konvergiert genau dann, wenn sie 
+    \begin{enumerate}
+        \item für jedes Polynom konvergiert und wenn
+        \item eine Schranke \(\Lambda\) existiert, sodass gilt 
+    \end{enumerate}
+    \[ \sup_{n\in\N} \sum_{i=0}^n \abs{\lambda_{n,i}} < \Lambda. \]
+
+    2. gilt mit \( \Lambda = \int_a^b w(x) \dx{x} = I(1) \), wenn die Quadraturformeln \( \set{\widehat{I_n}}_{n\in\N} \) 
+    Konstanten exakt integrieren und sämtliche Gewichte positiv sind.
+\end{karte}
+
+\begin{karte}{Konvergenz für Newton-Cotes-Formeln}
+    Bedingung 1 ist erfüllt, aber die Folge \( \set{ \sum_{i=0}^n \abs{\lambda_{n,i}} }_n \) 
+    wächst unbeschränkt, also ist Bedingung 2 nicht erfüllt.
+\end{karte}
+
+\begin{karte}{Konvergenz zusammengesetzte Trapez- und Simpson-Regel}
+    Bedingung 1 folgt aus Fehlerdarstellungen und Bedingung 2 folgt, da Konstanten exakt 
+    integriert werden und sämtliche Gewichte positiv sind.
+\end{karte}
+
+\begin{karte}{Konvergenz für Extrapolation}
+    Bedingung 1 folgt aus Fehlerdarstellung und Bedingung 2 folgt, wenn Schrittfolge hinreichend schnell 
+    fällt: \( h_j/h_{j+1} \geq q > 1 \). Dies ist für die Romberg-Folge der Fall.
+\end{karte}
+
+\begin{karte}{Konvergenz für Gauß-Quadratur}
+    Bedingung 1 ist erfüllt und Bedingung 2 ist erfüllt, da alle Integrationsgewichte positiv sind.
+\end{karte}
+
+\begin{karte}{Konvergenz für Riemann-integrierbare Funktionen}
+    Eine Folge \( \set{\widehat{I_n}}_{n\in\N} \) von interpolatorischen Quadraturformeln mit positiven 
+    Gewichten, die für alle Polynome konvergiert, konvergiert auch für Riemann-integrierbare Funktionen.
+\end{karte}
