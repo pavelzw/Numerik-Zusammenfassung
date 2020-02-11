@@ -1,3 +1,222 @@
-\begin{karte}{TEST}
-	Inhalt...
+\section{Interpolation und Approximation}
+
+\begin{karte}{Interpolation vs. Approximation}
+	\textit{Interpolation}: \( \varphi \) interpoliere \(f\), d. h.
+	\( \varphi^{(j)}(t_i) = f^{(j)}(t_i), i = 0,\ldots, n, j = 0, \ldots, k \).
+
+	\textit{Approximation}: \( \varphi \) approximiere \(f\), d. h. 
+	\( ||\varphi - f|| \) sei klein in einer geeigneten Norm.
+\end{karte}
+
+\subsection*{Klassische Polynom-Interpolation}
+
+\begin{karte}{Interpolationspolynom}
+	\( \Pi_n \) sei der Raum der Polynome vom Grad kleinergleich \(n\).
+
+	Zu \(n+1\) Stützwerten \( f_i, i = 0,\ldots,n \) und paarweise 
+	verschiedenen Knoten \( t_i \) existiert genau ein Interpolationspolynom 
+	\( P(f|t_0,\ldots, t_n) \in \Pi_n \), also \( P(t_i) = f(t_i) \).
+\end{karte}
+
+\begin{karte}{Vandermonde-Matrix}
+	Die \textit{Vandermonde-Matrix} zu Knoten \( t_i \) 
+	und Stützwerten \( f_i \) ist wie folgt definiert.
+	\[ \begin{pmatrix}
+		1 & t_0 & t_0^2 & \cdots & t_0^n \\
+		1 & t_1 & t_1^2 & \cdots & t_1^n \\
+		\vdots & \vdots & \vdots & & \vdots \\
+		1 & t_n & t_n^2 & \cdots & t_n^n
+	\end{pmatrix} =: V_n \in \R^{(n+1)\times (n+1)}. \]
+	Es gilt \( V_n \cdot (a_0 \cdots a_n)^T = (f_0 \cdots f_n)^T \), 
+	wobei \( a_i \) die Koeffizienten des Interpolationspolynoms sind.
+\end{karte}
+
+\begin{karte}{Lagrange-Polynom}
+	Sei 
+	\[ L_{n,k}(t) = \prod_{\substack{j=0\\j\neq k}}^n \frac{t - t_j}{t_k - t_j}. \]
+	\( \set{L_{n,0}, \ldots, L_{n,n}} \) ist die Lagrange-Basis von \( \Pi_n \).
+	
+	Es gilt 
+	\[ L_{n,k}(t_i) = \delta_{k,i} = \begin{cases}
+		1, &k = i, \\
+		0, &\text{sonst}.
+	\end{cases} \]
+
+	Für das Lagrange-Interpolationspolynom gilt 
+	\[ P = P(f|t_0,\ldots, t_n) = \sum_{k=0}^n f_k L_{n,k}. \]
+\end{karte}
+
+\begin{karte}{Lemma von Aitken}
+	Seien \( t_0 < \cdots < t_n \), dann gilt 
+	\[ P(f|t_0,\ldots, t_n)(t) = \frac{ (t_0 - t)P(f|t_1,\ldots,t_n)(t) 
+	- (t_n - t) P(f|t_0,\ldots, t_{n-1})(t) }{t_0 - t_n}. \]
+\end{karte}
+
+\begin{karte}{Schema von Neville}
+	Es sei \( P_{i,k} := P(f|t_{i-k}, \ldots, t_i)(t) \).
+	Das Schema von Neville berechnet \( P_{i,k} \in \Pi_k \) rekursiv:
+	\begin{align*}
+		P_{i,0} &= f_i \\
+		P_{i,k} &= \frac{(t_{i-k} - t)P_{i, k-1} - (t_i - t) P_{i-1,k-1}}{t_{i-k} - t_i}
+	\end{align*}
+
+	Nach Vollendung des Schemas hat man \( P_{n,n} = P(f|t_0,\ldots,t_n)(t) \)
+	als Ergebnis.
+\end{karte}
+
+\begin{karte}{Fehlerapproximation Interpolationspolynom}
+	Sei \( f \in \mathcal{C}^{n+1}([a,b]) \) und \( a \leq t_0 < \ldots < t_n \leq b \).
+	Für \(t\in [a,b]\) gibt es ein \( \tau = \tau(t) \in (a,b) \), sodass gilt 
+	\[ f(t) - P(f|t_0,\ldots, t_n)(t) = \frac{f^{(n+1)}(\tau)}{(n+1)!}\omega_{n+1}(t), \]
+	wobei \( \omega_{n+1} \in \Pi_{n+1} \) das \textit{Newton-Polynom} bezüglich 
+	\( t_0, \ldots, t_n \) ist: 
+	\[ \omega_{n+1}(t) := \prod_{i=0}^n (t - t_i). \]
+
+	Wir haben mit \( ||\omega_{n+1}||_\infty := \max_{t\in (a,b)} | \omega_{n+1}(t)| \)
+	\[ || f - P(f|t_0,\ldots, t_n) || \sup_{\tau \in [a,b]} \frac{ |f^{(n+1)}(\tau)| }{ (n+1)! } ||\omega_{n+1}||_\infty. \]
+\end{karte}
+
+\begin{karte}{Tschebyscheff-Knoten}
+	Das Minimum \( \min\set{|| \omega_{n+1}||_\infty \;|\; t_0, \ldots, t_n \in [a,b] } \)
+	wird für die \textit{Tschebyscheff-Knoten} bezüglich \([a,b]\) angenommen.
+	Diese sind gegeben durch
+	\[ t_i^{[a,b]} =) \frac{b+a}{2} + \frac{b-a}{2} \cos\left( \frac{2i + 1}{2n + 2} \pi \right). \]
+\end{karte}
+
+\begin{karte}{Satz von Faber}
+	Zu jeder Folge von Knoten \( \set{t_0^{(n)}, \ldots, t_n^{(n)} }_{n\in\N} \) 
+	in \( [a,b] \) gibt es eine auf \( [a,b] \) stetige Funktion \( f \), sodass 
+	die Folge \( \set{P(f|t_0^{(n)}, \ldots, t_n^{(n)})}_{n\in\N} \) der zugehörigen 
+	Interpolationspolynome für \( n\rightarrow \infty \) \textit{nicht} gleichmäßig gegen \(f\) konvergiert.
+\end{karte}
+
+\begin{karte}{Kondition der Polynom-Interpolation}
+	Seien \( a \leq t_0 < \ldots < t_n \leq b \). Die (relative) Kondition 
+	der Polynom-Interpolation \( f \mapsto P(f|t_0,\ldots, t_n) \) bezüglich der 
+	Supremumsnorm auf \( \mathcal{C}^0([a,b]) \) und \( \Pi_n \) gegeben durch 
+	\[ \kappa(f) = \frac{ \Lambda_n ||f||_\infty }{ || P(f|t_0,\ldots, t_n) ||_\infty }. \]
+	Hierbei ist 
+	\[ \Lambda_n = \max\left\{ \sum_{k=0}^n \abs{L_{n,k}(t)} \;|\; t\in [a,b] \right\}
+	= \left|\left| \sum_{k=0}^n \abs{L_{n,k}} \right|\right|_\infty \]
+	die \textit{Lebesgue-Konstante} bezüglich \( \set{t_0, \ldots, t_n} \).
+\end{karte}
+
+\subsection*{Splines und Spline-Interpolation}
+
+\begin{karte}{Spline der Ordnung \(k\)}
+	Sei \( \Delta = \set{t_0, \ldots, t_{l+1}} \) ein Gitter von \( l+2 \) 
+	paarweise verschiedenen Knoten \( a = t_0 < \cdots < t_{l+1} = b \). 
+	Ein \textit{Spline der Ordnung k} bezüglich \( \Delta \) ist eine Funktion 
+	\( s \in \mathcal{C}^{k-2}([a,b]) \), die auf jedem Intervall \( [t_i, t_{i+1}] \) 
+	mit einem Polynom \( s_i \in \Pi_{k-1} \) übereinstimmt. Mit \( S_{k, \Delta} \) 
+	bezeichnen wir den Raum aller Splines der Ordnung \( k \) bezüglich \( \Delta \).
+\end{karte}
+
+\begin{karte}{Basis des Spline-Raums}
+	Die abgebrochenen Potenzen seien wie folgt definiert:
+	\[ (t - t_i)_+^{k-1} := \begin{cases}
+		(t - t_i)^{k-1}, & t \geq t_i, \\
+		0 & t < t_i, 
+	\end{cases} t_i \in \Delta, i \neq l + 1. \]
+	Die Menge 
+	\[ \mathcal{B} = \set{ 1, t, \ldots, t^{k-1}, (t - t_1)_+^{k-1}, \ldots, (t - t_l)_+^{k-1}} \]
+	bildet eine Basis von \( S_{k, \Delta} \). Es gilt \( \dim(S_{k,\Delta}) = k+l \).
+\end{karte}
+
+\begin{karte}{Konstruktion lineare Splines}
+	\( I_2f = \sum_{i=0}^{l+1} f(t_i) B_i \), wobei \( B_i(t_k = \delta_{i,k}) \) bestimmt ist.
+
+	\[ I_2f = \sum_{i=1}^{l+1} \left(f_{i-1} + \frac{f_i - f_{i-1}}{t_i - t_{i-1}}(x - t_{i-1}) \right)\1_{[t_{i-1,t_i)}}(x) \]
+\end{karte}
+
+\begin{karte}{Krümmung einer Funktion}
+	Die Krümmung einer Funktion \( \abb{y}{[a,b]}{\R}, y\in \mathcal{C}^2([a,b]) \) 
+	ist gegeben durch 
+	\[ \kappa(t) := \frac{y''(t)}{ (1 + y'(t))^{3/2} }. \]
+
+	Die \( ||\cdot ||_2 \)-Norm von \( y'' \) ist gegeben durch 
+	\[ ||y''||_2 = (\int_a^b y''(t) \dx{t})^{1/2} \]
+\end{karte}
+
+\begin{karte}{Splines minimaler Krümmung}
+	Sei \( s \) ein interpolierender kubischer Spline von 
+	\(f\) zu den Knoten \( a = t_0 < \ldots < t_{l+1} = b \) und 
+	\( y\in \mathcal{C}^2([a,b]) \) eine von \(s\) verschiedene 
+	interpolierende Funktion von \(f\), sodass 
+	\[ s''(t)(y'(t) - s'(t)) |_{t=a}^{t=b} = 0 \]
+	ist. Dann gilt 
+	\[ s''||_2 < ||y''||_2. \]
+\end{karte}
+
+\begin{karte}{Kubische Spline-Interpolationsmöglichkeiten}
+	Fordern wir von \( s \in S_{4,\Delta}, \Delta = \set{t_0,\ldots, t_{l+1}} \) 
+	neben der Interpolationsbedingung \( s(t_i) = f(t_i) \) noch 
+	\begin{itemize}
+		\item \( s'(a) = f'(a) \) und \( s'(b) = f'(b) \) (vollständige Spline-Interpolation),
+		\item \( s''(a) = s''(b) = 0 \) (natürliche Spline-Interpolation), 
+		\item \( s'(a) = s'(b) \) und \( s''(a) = s''(b) \), falls \(f\) periodisch ist mit Periode 
+		\( b-a \) (periodische Spline-Interpolation),
+	\end{itemize}
+	so ist \(s\) eindeutig bestimmt. \\
+	1. und 3. haben die minimale Krümmung, d. h. dür jede andere 
+	interpolierende Funktion \( y \in \mathcal{C}^2([a,b]) \), die 
+	denselben Randbedingungen genügt, gilt ferner 
+	\[ ||s''||_2 < ||y''||_2. \]
+\end{karte}
+
+\begin{karte}{Fehlerabschätzung bei vollständig interpolierenden Splines}
+	Sei \( I_4f \in S_{4,\Delta} \) der vollständig interpoliere Spline 
+	zur Funktion \( f \in \mathcal{C}^4([a,b]) \) bezüglich 
+	\( \Delta = \set{t_0, \ldots, t_{l+1}} \). Dann gilt 
+	\[ || f - I_4f ||_\infty \leq \frac{5}{384}h^4 || f^{(4)}||_\infty \]
+	mit \( h = \max\set{|t_{i+1} - t_i : 0 \leq i \leq l} \).
+\end{karte}
+
+\begin{karte}{Kubische Spline-Interpolation Verfahren - Schritt 1}
+	Sei \( \Delta = \set{t_0,\ldots, t_{l+1}} \). Gesucht ist ein Spline \( s\in S_{4,\Delta} \), 
+	der \(f\) interpoliert.
+	Weiter sei \( h_{j+1} := t_{j+1} - t_j \) die Länge des \( (j-1) \)-ten Teilintervalls 
+	und \( M_j := s''(t_j) \) sind die \textit{Momente} des Splines.\\
+	Wir bilden ein LGS mit den Koeffizienten 
+	\[ \lambda_j = \frac{h_{j+1}}{h_j + h_{j+1}}, \quad \mu_j = 1 - \lambda_j = \frac{h_j}{h_j + h_{j+1}}, \;j = 1,\ldots, l \]
+	sowie 
+	\[ d_j = \frac{6}{h_j + h_{j+1}} \left( \frac{f_{j+1} - f_j}{h_{j+1}} - \frac{f_j - f_{j-1}}{h_j} \right), \;j = 1,\ldots, l. \]
+\end{karte}
+
+\begin{karte}{Kubische Spline-Interpolation Verfahren - Schritt 2}
+	Für die vollständige Interpolation definieren wir 
+	\begin{align*}
+		\lambda_0 &= 1, &d_0 &= \frac{6}{h_1}\left( \frac{f_1 - f_0}{h_1} - f_0' \right), \\
+		\mu_{l+1} &= 1, &d_{l+1} &= \frac{6}{h_{l+1}} \left( f_{l+1}' - \frac{f_{l+1} - f_l}{h_{l+1}} \right).
+	\end{align*}
+
+	Für die natürliche Interpolation definieren wir 
+	\[ \lambda_0 = d_0 = 0, \quad \mu_{l+1} = d_{l+1} = 0. \]
+
+	Wir erhalten so das folgende Gleichungssystem, welches wir nach 
+	\( (M_0,\ldots, M_{l+1})^T \) auflösen.
+	\[ \begin{pmatrix}
+		2 & \lambda_0 & \\
+		\mu_1 & 2 & \lambda_1 \\
+		& \ddots & \ddots & \ddots \\
+		& & \ddots & \ddots & \lambda_l \\
+		& & & \mu_{l+1} & 2
+	\end{pmatrix} \begin{pmatrix}
+		M_0 \\ \vdots \\ \vdots \\ M_{l+1}
+	\end{pmatrix} = \begin{pmatrix}
+		d_0 \\ \vdots \\ \vdots \\ d_{l+1}
+	\end{pmatrix}. \]
+\end{karte}
+
+\begin{karte}{Kubische Spline-Interpolation Verfahren - Schritt 3}
+	Seien für \( j = 0,\ldots, l \)
+	\begin{align*}
+		\alpha_j &= s_j(t_j) = f_j, \\
+		\beta_j &= s_j'(t_j) = \frac{f_{j+1} - f_j}{h_{j+1}} - \frac{2M_j + M_{j+1}}{6}h_{j+1}, \\
+		\gamma_j &= \frac{1}{2} s_j''(t_j) = \frac{1}{2} M_j, \\
+		\delta_j &= \frac{1}{6} s_j'''(t_j) = \frac{1}{6} \frac{M_{j+1} - M_j}{h_{j+1}}.
+	\end{align*}
+
+	Wir stellen nun \( s_j := s|_{[t_j, t_{j+1}]} \) wie folgt dar:
+	\[ s_j(t) = \alpha_j + \beta_j(t - t_j) + \gamma_j(t - t_j)^2 + \delta_j(t - t_j)^3. \]
 \end{karte}
