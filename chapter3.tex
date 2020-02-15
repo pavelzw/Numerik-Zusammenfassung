@@ -1,0 +1,261 @@
+\section{Stabilität num. Rechnungen}
+
+\subsection*{Maschinenzahlen}
+
+\begin{karte}{Darstellung reeller Zahlen}
+    Es sei \( \beta \in \N \) mit \( \beta \geq 2 \) und \( x \in \R\setminus\set{0} \).
+    Dann gibt es genau eine Darstellung von \( x \) in der Form 
+    \[ x = \sigma \sum_{k= -e + 1}^\infty d_{k+e} \beta^{-k} = \sigma \beta^e \sum_{k=1}^\infty d_k \beta^{-k} \]
+    mit \( d_k \in \set{ 0,1,\ldots, \beta - 1 }, e\in \Z, \sigma \in \set{+,-} \), 
+    wenn \( d_1 \neq 0 \) ist und zu jedem \( n\in\N \) ein Index \( \nu \geq n \) 
+    existiert mit \( d_\nu \neq \beta - 1 \) (\( \overline{9} \) wird vermieden).
+\end{karte}
+
+\begin{karte}{Mantisse}
+    Die Darstellung von Gleitkommazahlen lässt sich auf Rechnern nur in der Form 
+    \[ x = \sigma \beta^e \sum_{k=1}^t d_k \beta^{-1} = \sigma m \beta^{e-t} \]
+    mit festem \(t\in\N\) realisieren. \( m = \sum_{k=1}^t d_k \beta^{t-k}\in \N \)
+    heißt dabei Mantisse von \(x\) mit Mantissenlänge \(t\).
+\end{karte}
+
+\begin{karte}{System von Maschinenzahlen}
+    Unter einem Gleitkommazahlensystem verstehen wir eine Menge der Form 
+    \begin{align*}
+        \mathcal{F} &= \mathcal{F}(\beta, t, e_{\min}, e_{\max}) \\
+                    &= \set{ \pm m \beta^{e-t} \;|\; m\in\N 
+                    \text{ mit } \beta^{t-1} \leq m \leq \beta^t - 1 \text{ oder }
+                    m = 0, e_{\min} \leq e \leq e_{\max} }
+    \end{align*}
+    mit \( e_{\min}, e_{\max} \in\Z \) und \( e_{\min} < e_{\max} \).
+    
+    Es gilt 
+    \[ x \in \mathcal{F} \setminus \set{0} \Rightarrow \min(\mathcal{F}) := \beta^{e_{\min} - 1} \leq \abs{x} \leq \beta^{e_{\max}}(1 - \beta^{-t}) =: \max(\mathcal{F}) \]
+    und \[ \abs{ \mathcal{F} } = 1 + 2(e_{\max} - e_{\min} + 1)\beta^{t-1}(\beta - 1). \]
+    Die normalisierte Darstellung für \( x \in \mathcal{F} \setminus \set{0} \) lautet
+    \[ x = \pm \beta^e ( \frac{d_1}{\beta^1} + \cdots + \frac{d_t}{\beta^t} ) =: \pm 0,d_1 \ldots d_t \cdot \beta^e. \]
+\end{karte}
+
+\begin{karte}{Relative Maschinengenauigkeit}
+    Der Abstand der \(1\) zur nächstgrößeren Maschinenzahl ist \( \beta^{1-t} \).
+    Sei \( \min(\mathcal{F}) \leq \abs{x} \leq \max(\mathcal{F}) \). 
+    Es sei \( \mathrm{fl}(x) \in \mathcal{F} \) die zur \(x\) nächstliegende Maschinenzahl.
+    Dann gelten 
+    \[ \frac{ \abs{\mathrm{fl}(x) - x} }{ \abs{x} } < \varepsilon \text{ und } 
+    \frac{ \abs{ \mathrm{fl}(x) - x } }{\abs{ \mathrm{fl}(x) }} \leq \varepsilon,  \]
+    wobei \( \varepsilon := \frac{1}{2} \beta^{1-t} \) die \textit{relative Maschinengenauigkeit} ist.
+
+    Außerdem gilt 
+    \[ \mathrm{fl}(x) = x(1 + \delta) \text{ für ein } \delta \in \R, \abs{\delta} < \varepsilon \]
+    und 
+    \[ \mathrm{fl}(x) = \frac{x}{1 + \eta} \text{ für ein } \eta \in \R, \abs{\eta} \leq \varepsilon. \]
+\end{karte}
+
+\begin{karte}{Fehlerdarstellung Gleitkommaarithmetik}
+    Ein Rechner kann Elementaroperationen bis auf einen relativen Fehler bis auf einen 
+    relativen Fehler in der Größe der Maschinengenauigkeit \( \varepsilon \) realisieren: 
+    Für alle \( x,y\in \mathcal{F} \) gibt es reelle Zahlen \( \delta, \eta \) mit 
+    \( \max\set{\abs{\delta}, \abs{\eta}} \leq \varepsilon \), sodass gilt 
+    \[ x \circledast y = (x \ast y)(1 + \delta) = \frac{x \ast y}{1 + \eta}. \]
+\end{karte}
+
+\begin{karte}{Fehlerabschätzung für arithmetische Operationen}
+    Die \( n \) reellen Zahlen \( \tau_1,\ldots, \tau_n \) seien betragsmäßig 
+    kleiner als \( \varepsilon \). Weiter seien \( \sigma_1,\ldots,\sigma_n \in \set{+1,-1} \).
+    Falls \( n\varepsilon < 1 \) ist, dann haben wir 
+    \[ \prod_{k=1}^n (1 + \tau_k)^{\sigma_k} = 1 + \vartheta_n \text{ für ein } 
+    \vartheta_n \in \R \text{ mit }
+    \abs{ \vartheta_n } \leq \frac{n \varepsilon}{ 1 - n\varepsilon } =: \gamma_n. \]
+
+    Für die \( \vartheta_n \)-Notation gelten folgende Rechenregeln 
+    \begin{align*}
+        (1 + \vartheta_k)(1 + \vartheta_l) &= 1 + \vartheta_{k+l} \\
+        (1 + \tau)(1 + \vartheta_k) &= 1 + \vartheta_{k+1}, \quad \abs{\tau} < \varepsilon.
+    \end{align*}
+\end{karte}
+
+\begin{karte}{Fehlerfaktoren bei Summation Teil 1}
+    Sei \( S(x) = \sum_{i=1}^n x_i \). Dann ist die am Computer berechnete Summation 
+    \[ \tilde{S}(x) = (x_1 + x_2) \prod_{i=1}^{n-1} (1+\delta_i) + \sum_{k=3}^n x_k \prod_{i=k-1}^{n-1} (1+\delta_i), \quad \abs{\delta_i < \varepsilon} \]
+    und daher 
+    \[ \tilde{S}(x) = (x_1 + x_2)(1 + \vartheta_{n-1}) + \sum_{k=3}^n x_k(1 + \vartheta_{n-k+1}), \]
+    woraus sich für den Fehler ergibt:
+    \[ \abs{ \tilde{S}(x) - S(x) } \leq \abs{x_1 + x_2}\gamma_{n-1} + \sum_{k=3}^n \abs{x_k}\gamma_{n-k+1}. \]
+
+    Um den Gesamtfehler zu minimieren, ist es sinnvoll, die Summanden betragsmäßig der Größe 
+    nach zu ordnen und in dieser Reihenfolge zu summieren.
+    
+    Eine worst case Fehlerabschätzung ergibt sich durch 
+    \[ \abs{ \tilde{S}(x) - S(x) } \leq \gamma_n \sum_{k=1}^n \abs{x_k} \]
+\end{karte}
+
+\begin{karte}{Fehlerfaktoren bei Summation Teil 2}
+    Durch die worst case Fehlerabschätzung folgt der relative Summationsfehler 
+    \[ \abs{ \frac{ \tilde{S}(x) - S(x) }{ S(x) } } \leq \frac{n}{1 - n\varepsilon} \underbrace{ \frac{ \sum_{k=1}^n \abs{x_k} }{ \abs{ \sum_{k=1}^n x_k } } }_{=: \kappa_S(x)} \varepsilon. \]
+    Für \( n\varepsilon \ll 1 \) ist \( \gamma_n \approx n\varepsilon \). 
+    Die Fehlerschranke hat die Form 
+    \[ \abs{ \frac{ \tilde{S}(x) - S(x) }{ S(x) } } \leq \sigma_S \kappa_S(x) \varepsilon, \]
+    wobei \( \sigma_S \) die numerische Stabilität, \( \kappa_S(x) \) die Kondition 
+    der Summation und \( \varepsilon \) die Störgröße darstellen.
+
+    Bei einer großen Kondition können kleine Störungen zu großen Fehlern führen. 
+    Es gilt 
+    \[ \abs{ \sum_{k=1}^n x_k } \ll \sum_{k=^1}^n \abs{x_k} \Rightarrow \kappa_S(x) \gg 1. \]
+\end{karte}
+
+\begin{karte}{Auslöschung}
+    Die Subtraktion zweier gleich großer Zahlen sollte vermieden werden, 
+    da sich bereits gemachte Fehler verstärken können. Dieses Phänomen heißt \textit{Auslöschung}.
+    Unvermeidbare Subtraktionen sollten so früh wie möglich gemacht werden, um große Rundungsfehler 
+    zu vermeiden.
+\end{karte}
+
+\subsection*{Vektor- und Matrixnorm}
+
+\begin{karte}{Häufig verwendete Normen}
+    \( p \)-Normen:
+    \[ ||v||_p := \left( \sum_{k=1}^n \abs{v_k}^p \right)^{1/p}. \]
+    \( p = 2 \) ist die \textit{Euklidische Norm}.
+
+    \( p = \infty \) Maximumsnorm
+    \[ ||v||_\infty = \max\set{|v_k| \;|\; 1 \leq k \leq n}. \]
+\end{karte}
+
+\begin{karte}{Normäquivalenz}
+    Alle Normen auf einem endlichdimensionalen Vektorraum sind äquivalent, d. h. 
+    zu jedem Paar \( || \cdot ||, || \cdot ||_\star \) von Normen auf \(V\) 
+    existieren Konstanten \( 0 \leq m \leq M < \infty \), sodass gilt 
+    \[ m ||w|| \leq ||w||_\star \leq M||w||. \]
+    Die Konstanten hängen im Allgemeinen von \( \dim(V) \) ab.
+\end{karte}
+
+\begin{karte}{Induzierte Matrixnorm}
+    Seien \( ||\cdot||_* \) und \( ||\cdot||_\star \) Normen auf 
+    \( \K^n \) bzw. \( \K^m \). Dann ist \( \abb{|| \cdot||}{\K^{m\times n}}{[0,\infty)} \), 
+    \[ ||A|| := \max_{v\in\K^n\setminus\set{0}} \frac{||Av||_\star}{||v||_*} = \max_{v\in\K^n, ||v||_* = 1} ||Av||_\star \]
+    eine Norm auf dem Vektorraum der \( m\times n \)-Matrizen. Diese Norm wird auch \textit{induzierte 
+    Matrixnorm} oder \textit{Operatornorm} genannt.
+
+    Es gilt 
+    \[ ||Av||_\star \leq ||A|| \; ||v||_* \]
+    und außerdem 
+    \[ ||AB|| \leq ||A|| \; ||B||. \]
+\end{karte}
+
+\begin{karte}{Matrix-\(p\)-Norm}
+    Die durch die jeweilige \(p\)-Normen induzierte Norm nennt sich Matrix-\(p\)-Norm.
+    
+    \( p=1 \) (Spaltensummennorm): 
+    \[ ||A||_1 = \max_{j\in[n]} ||a_j||_1 = \max_{j\in[n]} \sum_{i=1}^m |a_{i,j},  \]
+    wobei \( a_j \) die \(j\)-te Spalte von \(A\) ist.
+
+    \( p=2 \) (Spektralnorm):
+    \[ ||A||_2 = \sqrt{\lambda_{\max}(A^H A)}, \]
+    wobei \( \lambda_{\max}(A^H A) \) der größte Eigenwert von \( A^H A \) ist.
+    Es gilt 
+    %todo\[ ||A||_2 = ||A^H||_2, \quad ||A^H A||_2 = ||A||_^2, \quad ||QA||_2 = ||A||_2 \text{ für alle unitären } Q. \]
+
+    \( p=\infty \) (Zeilensummennorm):
+    Es gilt 
+    \[ ||A||_\infty = \max_{i\in[m]} \sum_{j=}^m \abs{a_{i,j}}. \]
+\end{karte}
+
+\begin{karte}{Kondition einer Matrix}
+    Seo \( A \in \K^{n\times n} \) regulär und \( ||\cdot|| \) eine induzierte 
+    Matrixnorm. Dann heißt 
+    \[ \kappa(A) = ||A|| \; ||A^{-1}|| \]
+    die \textit{Kondition} oder \textit{Konditionszahl} von \(A\) bzgl. der Matrixnorm.
+    Die Kondition ist immer größer oder gleich \(1\). Für Matrix-\(p\)-Normen schreiben wir 
+    \( \kappa_p(A) \).
+\end{karte}
+
+\begin{karte}{Minimaler Abstand zu einer singulären Matrix}
+    Sei \( A \in \K^{n\times n} \) regulär und \( 1 \leq p \leq \infty \). 
+    Dann gilt 
+    \[ \min \set{ \frac{||A-S||_p}{||A||_p} \; | \; S \in \K^{n\times n} \text{ singulär} } = \frac{1}{\kappa_p(A)}. \]
+    Das heißt je größer die Kondition einer Matrix ist, desto näher liegt sie an einer singulären 
+    (nicht invertierbaren) Matrix.
+\end{karte}
+
+\begin{karte}{Untere Schranke für Matrixnorm}
+    Sei \( \lambda_{\max}(A) \) der betragsgrößte Eigenwert von \( A \in \K^{n\times n} \), 
+    dann gilt 
+    \[ \abs{ \lambda_{\max}(A)} = \inf \set{ ||A|| \;|\; ||\cdot|| \text{ ist induzierte Matrixnorm} }, \]
+    d. h. zu jedem \(\delta > 0\) gibt es eine induzierte Matrixnorm \( ||\cdot||_\delta \), 
+    sodass 
+    \[ ||A||_\delta < \abs{\lambda_{\max}(A)} + \delta \]
+    ist.
+\end{karte}
+
+\subsection*{Kondition eines math. Problems}
+
+\begin{karte}{Kondition eines mathematischen Problems}
+    Unter der relativen Kondition (Konditionszahl) des Problems 
+    \( (f,x) \) verstehen wir die kleinstmögliche Zahl 
+    \( \kappa_f(x) \geq 0 \) (falls diese existiert), sodass gilt 
+    \[ \frac{ || f(x + \Delta x) - f(x) ||_Y }{ || f(x) ||_Y } \leq \kappa_f(x) \frac{ ||\Delta x||_X }{||x||_X} + \mathrm{o}(||\Delta x||_X) \text{ für } ||\Delta x||_X \rightarrow 0. \]
+    Die Konditionszahl hängt von den gewählten Normen in \(X\) und \(Y\) ab. Sie ist ein Maß für 
+    Sensitivität von \(f(x)\) gegenüber Störungen in \(x\). Wir haben 
+    \[ \kappa_f(x) = \limesx{\delta}{0}\sup \left\{ \frac{ || f(x+\Delta x) - f(x) ||_Y ||x||_X }{ ||f(x)||_Y ||\Delta x||_X } \;|\; \Delta x \in X, x + \Delta x \in E, ||\Delta x ||_X\leq \delta \right\}. \]
+    Das Problem \( (f,x) \) heißt \textit{gut konditioniert}, falls \( \kappa_f(x) \) klein ist, sonst \textit{schlecht konditioniert}.
+    Existiert der Limes superior nicht, dann setzen wir \( \kappa_f(x) = \infty \) und sprechen von einem 
+    \textit{schlecht gestellten} Problem.
+\end{karte}
+
+\begin{karte}{Berechnung für Kondition eines mathematischen Problems}
+    Ist \( \abb{f}{E\subset \R^n}{\R^m} \) stetig differenzierbar in einer Umgebung von \( x\in E \), 
+    dann gilt 
+    \[ \kappa_f(x) = \frac{||f'(x)|| \; ||x||_X }{ ||f(x)||_Y }. \] 
+    Hier bezeichnet \( f'(x) \in \R^{m\times n} \) die Jacobi-Matrix von \(f\) in \(x\) und \( ||\cdot|| \) die 
+    induzierte Matrixnorm.
+\end{karte}
+
+\begin{karte}{Konditionszahlen}
+    Konditionszahl einer Summe \( f(x) = \sum_{i=1}^n x_i \):
+    \[ \kappa_f(x) = \frac{ \sum_{i=1}^n \abs{x_i} }{ \abs{ \sum_{i=1}^n x_i } }. \]
+    Konditionszahl der Matrix-Vektor-Multiplikation \( f(x) = Ax \):
+    \[ \kappa_f(x) = \frac{||A||\;||x||_X}{||Ax||_Y}. \]
+    Sei \(A\) quadratisch und regulär: \(\kappa_f(x) \leq \kappa(A) = ||A||\;||A^{-1}||\). 
+\end{karte}
+
+\subsection*{Stabilität num. Algorithmen}
+
+\begin{karte}{Vorwärtsanalyse}
+    Der \textit{Stabilitätsindikator der Vorwärtsanalyse} des Algorithmus' 
+    \( \tilde{f} \) zur Lösung von \( (f,x) \) ist die kleinstmögliche Zahl \( \sigma = \sigma(x) \geq 0 \), 
+    sodass gilt 
+    \[ \frac{ ||\tilde{f}(x^\varepsilon) - f(x^\varepsilon)||_Y }{||f(x^\varepsilon)||_Y} 
+    \leq \sigma \kappa_f(x^\varepsilon)\varepsilon + \mathrm{o}(\varepsilon) \text{ für }\varepsilon \rightarrow 0, \]
+    für jede Schar \( \set{x^\varepsilon}_{\varepsilon > 0} \) mit \( \frac{ ||x - x^\varepsilon||_X }{ ||x||_X } \leq \varepsilon \).
+
+    Für jedes Element \( x^\varepsilon \) mit relativem Abstand \(\varepsilon\) zu \(x\) darf der relative 
+    Fehler von \( \tilde{f}(x^\varepsilon) \) zu \( f(x^\varepsilon) \) im wesentlichen nicht größer sein als 
+    \( \sigma \kappa_f(x^\varepsilon)\varepsilon \).
+\end{karte}
+
+\begin{karte}{Stabilität zusammengesetzter Algorithmen - Vorwärtsanalyse}
+    Das mathematische Problem \( (f,x) \) sei aus Teilproblemen zusammengesetzt, also \( f = h\circ g \)
+    mit den Algorithmen \( \tilde{g} \) und \( \tilde{h} \). Dann gilt für \( \tilde{f} = \tilde{h} \circ \tilde{g} \)
+    \[ \sigma_{\tilde{f}}(x) \kappa_f(\tilde{x}) \leq 
+    \sigma_{\tilde{g}}(x) \kappa_g(\tilde{x}) \left( \sigma_{\tilde{h}}(g(\tilde{x})) \kappa_h(\tilde{g}(\tilde{x})) + \kappa_h(g(\tilde{x})) \right) \]
+    für alle \( \tilde{x} \) mit \( ||x-\tilde{x}||_X \leq \varepsilon ||x||_X \).
+
+    Setzen wir \( x = \tilde{x} \) und nehmen an, dass \( \kappa_h(\tilde{g}(x)) = \kappa_h(g(x)) \), so 
+    erhalten wir 
+    \[ \sigma_{\tilde{f}}(x) \leq \sigma_{\tilde{g}}(x) \left( \sigma_{\tilde{h}}(g(x)) + 1 \right) 
+    \frac{ \kappa_g(x) \kappa_h(g(x)) }{ \kappa_f(x) }. \]
+    Der Quotient rechts bildet hierbei eine Schranke, d. h. versuche, die Zerlegung mit dem kleinsten Quotienten zu finden.
+\end{karte}
+
+\begin{karte}{Rückwärtsanalyse}
+    Der \textit{Stabilitätsindikator der Rückwärtsanalyse} des Algorithmus' \(\tilde{f}\) 
+    zur Lösung von \( (f,x) \) ist die kleinstmögliche Zahl \( \varrho = \varrho(x) \geq 0 \), 
+    für die für jede Schar \( \set{x^\varepsilon}_{\varepsilon>0} \) mit 
+    \( \frac{||x^\varepsilon - x||_X}{||x||_X} \leq \varepsilon \) ein 
+    \( \widehat{x}^\varepsilon \) existiert mit \( f(\widehat{x}^\varepsilon) = \tilde{f}(x^\varepsilon) \) 
+    und \( \frac{ ||\widehat{x}^\varepsilon - x^\varepsilon||_X }{||x^\varepsilon||_X} \leq \varrho\varepsilon + \mathrm{o}(\varepsilon) \) 
+    für \( \varepsilon \rightarrow 0 \).
+\end{karte}
+
+\begin{karte}{Zusammenhang Rückwärtsstabilität Vorwärtsstabilität}
+    Es gilt \( \sigma \leq \varrho \), d. h. aus der Rückwärtsstabilität folgt die Vorwärtsstabilität.
+\end{karte}

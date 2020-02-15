@@ -1,0 +1,150 @@
+\section*{LGS und Ausgleichsprobleme}
+
+\subsection*{Direkte Verfahren}
+
+\begin{karte}{Direkte Verfahren}
+    Gegeben eine reguläre Matrix \( A = (a_{i,j}) \in \R^{n\times n} \) sowie ein Vektor 
+    \( b \in \R^n \). Wir suchen den eindeutigen Vektor \(x \in \R^n\) mit 
+    \[ Ax = b \Leftrightarrow \sum_{j=1}^n a_{i,j} x_j = b_i. \]
+    \textit{Direkte Verfahren} liefern \(x \) bei exakter Arithmetik nach 
+    endlich vielen Rechenoperationen.
+\end{karte}
+
+\begin{karte}{Cramersche Regel}
+    Die eindeutige Lösung von \( x \) ist gegeben durch 
+    \[ x_j = \frac{ \det(A[j]) }{ \det(A) }, \]
+    wobei \( A[j] = (a_1, \ldots, a_{j-1}, b, a_{j+1}, \ldots, a_n) \in \R^{n\times n} \) ist.
+\end{karte}
+
+\begin{karte}{Rückwärtssubstitution/Vorwärtssubstitution}
+    Sei \( R \) eine obere Dreiecksmatrix, gesucht ist \(x\) in \( Rx = z \).
+    Durch \textit{Rückwärtssubstitution} bekommen wir \(x\):
+    \begin{align*}
+        x_n &= z_n / r_{n,n}, \\
+        x_{n-1} &= (z_{n-1} - r_{n-1,n} x_n) / r_{n-1,n-1}, \\
+        \vdots \\
+        x_i &= (z_i - r_{i,i+1} x_{i+1} - \cdots - r_{i,n} x_n) / r_{i,i} \\
+        \vdots \\
+        x_1 &= (z_1 - r_{1,2}x_2 - \cdots - r_{1,n}x_n) / r_{1,1}.
+    \end{align*}
+    Analog \textit{Vorwärtssubstitution} für eine untere Dreiecksmatrix \(L\).
+\end{karte}
+
+\subsection*{Die LR-Zerlegung}
+
+\begin{karte}{Gaußsche Dreieckszerlegung/LR-Zerlegung}
+    Sei \(A\) regulär. Gesucht sind Matrizen \( L, R \) mit 
+    \(L\) untere Dreiecksmatrix mit \(1\) auf der Diagonalen und 
+    \(R\) obere Dreiecksmatrix. 
+
+    Führe Gauß-Algorithmus aus (ohne normierte Diagonale und ohne Zeilenvertauschungen und Multiplikationen), 
+    wobei \(A^{(i)}\) die umgeformte Matrix \(A\) im \(i\)-ten Schritt ist.
+    Es gilt \( A^{(i+1)} = L_i A^{(i)} \). 
+    Am Ende des Gauß-Algorithmus' haben wir \( R = A^{(n)} \) 
+    und \( L = L_1^{-1}\cdots L_{n-1}^{-1} \).
+    Wenn wir durch den Gauß-Algorithmus eine \gqq{Buchführungsmatrix} erstellen, 
+    so ist diese \( L^{-1} \) und man muss diese nur noch invertieren.
+
+    Dies funktioniert nur, wenn im Laufe der Rechnungen die Pivot-Elemente nicht verschwinden.
+\end{karte}
+
+\begin{karte}{LGS lösen mit LR-Zerlegung}
+    Zur Lösung eines LGS \( Ax = b \) genügen drei Schritte: 
+    \begin{enumerate}
+        \item \( A = LR \) LR-Zerlegung
+        \item \( Lz = b \) Vorwärtssubstitution
+        \item \( Rx = z \) Rückwärtssubstitution
+    \end{enumerate}
+    Dies geschieht in \( \mathcal{O}(n^3) \).
+\end{karte}
+
+\begin{karte}{Diagonaldominante Matrix}
+    Eine Matrix \( A \in \R^{n\times n} \) heißt \textit{diagonaldominant}, falls für jede Zeile der 
+    Betrag des Diagonalelements größer ist als die Betragssumme der Außerdiagonalelemente, d. h. 
+    \[ \abs{a_{i,i}} > \sum_{\substack{j=1\\j\neq i}}^n \abs{a_{i,j}} \;\forall i \in [n]. \]
+    Eine diagonaldominante Matrix besitzt eine LR-Zerlegung und ist regulär.
+\end{karte}
+
+\begin{karte}{LR-Zerlegung mit Spaltenpivotsuche}
+    Führe Gauß-Algorithmus aus und vertausche im \(k\)-ten Schritt die \( k \)-te Zeile 
+    mit einer Zeile \( j \geq k \), für die gilt 
+    \[ \abs{ a_{j,k}^{(k)} } = \max_{k\leq i \leq n} \abs{a_{i,k}^{(k)}}. \]
+    Führe \gqq{Permutationsbuchführungsmatrix} \( P \) während des Algorithmus und tausche die Einträge 
+    unter der Diagonale in \( L^{-1} \).
+
+    Der Gauß-Algorithmus mit Spaltenpivotsuche liefert für jede reguläre Matrix \( A \)
+    eine Permutationsmatrix \(P\) sowie Dreiecksmatrizen \(L\) und \(R\), sodass 
+    \[ PA = LR. \]
+    Darüber hinaus sind die Elemente von \(L\) betragsmäßig kleiner als \(1\).
+\end{karte}
+
+\begin{karte}{Rückwärtsanalyse der LR-Zerlegung}
+    Die LR-Zerlegung mit Spaltenpivotsuche in Gleitkomma-Arithmetik der Genauigkeit \( \varepsilon \)
+    angewandt auf \( A \in \R^{n\times n} \) breche nicht vorzeitig ab und die Anwendung auf das 
+    Gleichungssystem \( Ax = b \) liefere die numerische Lösung \( \tilde{x} \). Dann existiert ein 
+    \( \widehat{A} \in \R^{n \times n} \) mit \( \widehat{A}\tilde{x} = b \) und 
+    \[ \frac{ ||\widehat{A} - A ||_\infty }{ ||A||_\infty } \leq 2 n^3 \rho_n(A) \varepsilon + \mathrm{o}(\varepsilon) \text{ für } \varepsilon \rightarrow 0 \]
+    mit 
+    \[ \rho_n(A) = \frac{ \max_{i,j,k} \abs{ a_{i,j}^{(k)} } }{\max_{i,j} \abs{ a_{i,j} }} \geq 1, \]
+    wobei \( a_{i,j}^{(k)} \) die Elemente der Matrizen \( A^{(k)} \) sind. Die Zahl \( \rho_n(A) \) heißt 
+    Wachstumsfaktor von \(A\).
+
+    Diagonaldominante Matrizen erfüllen \( \rho_n \leq 2 \).
+\end{karte}
+
+\begin{karte}{Bandmatrix}
+    Die Bandlänge einer Matrix \(A \in \R^{N\times N} \) ist das kleinste \( m\in \N \), sodass \( A_{i,j} = 0 \) 
+    für \( \abs{i-j} > m \). 
+    Der Aufwand für LR-Zerlegung ohne Pivotisierung ist in \( \mathrm{O}(m^2N) \) 
+    und wir erhalten für \( m = \mathrm{O}(1) \) einen schnellen Löser, also ein Lösungsverfahren in 
+    \( \mathrm{O}(N) \) Schritten.
+\end{karte}
+
+\subsection*{Die Cholesky-Zerlegung}
+
+\begin{karte}{Positiv definiit}
+    Eine Matrix \( A\in\R^{n\times n} \) heißt \textit{positiv definit} (auch \(A > 0\)), 
+    falls \( A \) symmetrisch ist und \( \langle Ax, x\rangle_2 = x^T Ax > 0 \) 
+    für alle \( x\in\R^n \setminus \set{0} \) gilt.
+
+    Eine symmetrische Matrix \( A \in \R^{n\times n} \) ist genau dann positiv definit, wenn alle 
+    Hauptminoren positiv sind.
+
+    Sei \(A > 0\). Dann gelten 
+    \begin{enumerate}
+        \item \(A\) ist regulär,
+        \item \( a_{i,i} > 0 \) und \( \abs{ a_{i,k} } < \sqrt{a_{i,i} a_{k,k}} \leq \frac{1}{2} (a_{i,i} + a_{k,k}) \) für \( i\neq k \),
+        \item \( \max_{i,j} \abs{a_{i,j}} = \max_{k} \abs{a_{k,k}} \).
+    \end{enumerate}
+\end{karte}
+
+\begin{karte}{Cholesky-Zerlegung}
+    Sei \( A > 0 \). Dann existiert eine untere Dreiecksmatrix \( L \) mit positiven Diagonaldominanten, sodass 
+    \[ A = L L^T \]
+    ist. Diese Faktorisierung heißt \textit{Cholesky-Zerlegung} von \(A\).
+\end{karte}
+
+\begin{karte}{Cholesky-Zerlegung Konstruktion}
+    \begin{align*}
+        a_{1,1} &= l_{1,1}^2 &\Longrightarrow l_{1,1} &= \sqrt{a_{1,1}} \\
+        a_{2,1} &= l_{2,1} l_{1,1} &\Longrightarrow l_{2,1} &= a_{2,1} / l_{1,1} \\
+        \vdots &&&\vdots \\
+        a_{n,1} &= l_{n,1} l_{1,1} &\Longrightarrow l_{n,1} &= a_{n,1} / l_{1,1} \\
+        a_{2,2} &= l_{2,1}^2 + l_{2,2}^2 &\Longrightarrow l_{2,2} &= \sqrt{a_{2,2} - l_{2,1}^2} \\
+        a_{3,2} &= l_{3,1} l_{2,1} + l_{3,2} l_{2,2} &\Longrightarrow l_{3,2} &= (a_{3,2} - l_{3,1} l_{2,1})/l_{2,2} \\
+        \vdots &&& \vdots \\
+        a_{n,2} &= l_{n,1}l_{2,1} + l_{n,2}l_{2,2} &\Longrightarrow l_{n,2} &= (a_{n,2} - l_{n,1}l_{2,1})/l_{2,2} \\
+        a_{3,3} &= l_{3,1}^2 + l_{3,2}^2 + l_{3,3}^2 &\Longrightarrow l_{3,3} &= \sqrt{a_{3,3} - l_{3,1}^2 - l_{3,2}^2} \\
+        a_{4,3} &= l_{4,1}l_{3,1} + l_{4,2} l_{3,2} + l_{4,3} l_{3,3} &\Longrightarrow l_{4,3} &= (a_{4,3} - l_{4,1} l_{3,1} - l_{4,2} l_{3,2}) / l_{3,3} \\
+        \vdots &&& \vdots
+    \end{align*}
+\end{karte}
+
+\begin{karte}{Rückwärtsanalyse für Cholesky-Zerlegung}
+    Sei \( A \in \R^{n\times n} \) positiv definit. Der Algorithmus für die Cholesky-Zerlegung in 
+    Gleitkomma-Arithmetik mit Genauigkeit \( \varepsilon \) liefere den Faktor \( \tilde{L} \). 
+    Dann gilt 
+    \[ \frac{ ||\tilde{L}\tilde{L}^T - A||_2 }{ ||A||_2 } \leq 8 n (n+1)\varepsilon + \mathrm{o}(\varepsilon) \text{ für } \varepsilon \rightarrow 0. \]
+    Die Cholesky-Zerlegung einer \( n\times n \)-Matrix benötigt ca. \( n^3/6 \) Multiplikationen 
+    (zzgl. der Auswertung von \(n\) Quadratwurzeln). Somit ist sie stabil.
+\end{karte}
