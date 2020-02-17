@@ -232,20 +232,6 @@
     \( \sigma \kappa_f(x^\varepsilon)\varepsilon \).
 \end{karte}
 
-\begin{karte}{Stabilität zusammengesetzter Algorithmen - Vorwärtsanalyse}
-    Das mathematische Problem \( (f,x) \) sei aus Teilproblemen zusammengesetzt, also \( f = h\circ g \)
-    mit den Algorithmen \( \tilde{g} \) und \( \tilde{h} \). Dann gilt für \( \tilde{f} = \tilde{h} \circ \tilde{g} \)
-    \[ \sigma_{\tilde{f}}(x) \kappa_f(\tilde{x}) \leq 
-    \sigma_{\tilde{g}}(x) \kappa_g(\tilde{x}) \left( \sigma_{\tilde{h}}(g(\tilde{x})) \kappa_h(\tilde{g}(\tilde{x})) + \kappa_h(g(\tilde{x})) \right) \]
-    für alle \( \tilde{x} \) mit \( ||x-\tilde{x}||_X \leq \varepsilon ||x||_X \).
-
-    Setzen wir \( x = \tilde{x} \) und nehmen an, dass \( \kappa_h(\tilde{g}(x)) = \kappa_h(g(x)) \), so 
-    erhalten wir 
-    \[ \sigma_{\tilde{f}}(x) \leq \sigma_{\tilde{g}}(x) \left( \sigma_{\tilde{h}}(g(x)) + 1 \right) 
-    \frac{ \kappa_g(x) \kappa_h(g(x)) }{ \kappa_f(x) }. \]
-    Der Quotient rechts bildet hierbei eine Schranke, d. h. versuche, die Zerlegung mit dem kleinsten Quotienten zu finden.
-\end{karte}
-
 \begin{karte}{Rückwärtsanalyse}
     Der \textit{Stabilitätsindikator der Rückwärtsanalyse} des Algorithmus' \(\tilde{f}\) 
     zur Lösung von \( (f,x) \) ist die kleinstmögliche Zahl \( \varrho = \varrho(x) \geq 0 \), 

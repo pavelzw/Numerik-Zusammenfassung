@@ -124,32 +124,6 @@
     \( \tau_{2k} \) und es gilt \( \abs{ T(f,h) - I(f) } = \mathrm{O}(h^{2m+2}) \) für \(h\rightarrow 0\).
 \end{karte}
 
-\begin{karte}{Romberg-/Extrapolationsverfahren}
-    Wir erhalten für verschiedene \( h_i \) Stützwerte 
-    \[ (h_0^2, T(h_0), \ldots, (h_m^2, T(h_m))). \]
-    Wenn wir diese in einem interpolierenden Polynom bei Null auswerten, bekommen wir 
-    \[ P(T|h_0^2, \ldots, h_m^2)(0) \approx I(f). \]
-
-    Wende das Schema von Neville an (\(t=0\)):
-    \[ T_{i,0} = P(T|h_i^2) = T(h_i), \]
-    \[ T_{i,k} = T_{i,k-1} + \frac{ T_{i,k-1} - T_{i-1,k-1} }{\frac{ h_{i-k}^2 }{h_i^2} - 1} \]
-\end{karte}
-
-\begin{karte}{Fehler Romberg-/Extrapolationsverfahren}
-    Sei die Schrittweite \( \set{h_j}_{j\in\N_0} \) ausgehend von der Grundschrittweite \(h\).
-    Dann gilt 
-    \[ T_{i,k} - I(f) = \frac{ (-1)^k \tau_{2(k+1)} }{ n_{i-k}^2 n_{i-k+1}^2 \cdots n_i^2 } h^{2(k+1)} + \mathrm{O}(h^{2(k+2)}) \]
-    für \( h\rightarrow 0 \) und \( 0 \leq k \leq i \leq m \), falls \(f\) hinreichend glatt über \([a,b]\) ist.
-\end{karte}
-
-\begin{karte}{Folgen für Extrapolationsverfahren}
-    Gebräuchliche Folgen zur Verkleinerung der Grundschrittweite \(h\) sind 
-    \begin{description}
-        \item[Romberg-Folge:] \( h_j = \frac{h_{j-1}}{2} = \frac{h}{2^j} \),
-        \item[Bulirsch-Folge:] \( H_1 = \frac{h}{2}, h_2 = \frac{h}{3}, h_3 = \frac{h}{4}, h_j = \frac{h}{n_j} \) mit \( n_j = 2 \cdot n_{j-2} \).
-    \end{description}
-\end{karte}
-
 \subsection*{Gauß-Quadratur}
 
 \begin{karte}{Integral über Gewichtsfunktion}
@@ -228,33 +202,6 @@
         \( [0,\infty) \) & \( x^\alpha e^{-x^2}, \alpha > -1 \) & Laguerre-Polynome
     \end{tabular}
     \end{center}
-\end{karte}
-
-\begin{karte}{Berechnung Integrationsgewichte und Knoten über Matrix Schritt 1}
-    Die Knoten der Quadraturformel lassen sich im Allgemeinen nicht einfach berechnen. 
-    Die 3-Term-Rekursion gibt uns 
-    \[ p_0 = 1, \quad p_1 = t - \beta_1, \quad p_k(t) = (t - \beta_k)p_{k-1}(t) - \gamma_k^2 p_{k-2}(t) \]
-    mit den Koeffizienten 
-    \[ \beta_k = \frac{(tp_{k-1}, p_{k-1})_w}{|| p_{k-1} ||_w^2} \text{ und } \gamma_k = \frac{||p_{k-1}||}{||p_{k-2}||}. \]
-    Wir definieren die symmetrische Tridiagonalmatrix 
-    \[ J := \begin{pmatrix}
-        \beta_1 & -\gamma_2 & 0 & \cdots & 0 \\
-        -\gamma_2 & \beta_2 & -\gamma_3 \ddots & \vdots \\
-        0 & -\gamma_3 & \ddots & \ddots & 0 \\
-        \vdots & \ddots & \ddots & \ddots & -\gamma_{n+1} \\
-        0 & \cdots & 0 & -\gamma_{n+1} & \beta_{n+1}
-    \end{pmatrix} \in \R^{(n+1)\times(n+1)} \]
-\end{karte}
-
-\begin{karte}{Berechnung Integrationsgewichte und Knoten über Matrix Schritt 2}
-    Die Nullstellen \( \tau_{n,0}, \ldots, \tau_{n,n} \) des \( (n+1) \)-ten Orthogonalpolynoms 
-    stimmen mit den Eigenwerten der Matrix \(J\) überein. Für die Integrattionsgewichte \( \lambda_{n,k} \) gilt 
-    \[ \lambda_{n,k} = \frac{ \int_a^b w(t) \dx{t} }{ \sum_{j=0}^n \sigma_j^2 p_j^2(\tau_{n,k}) }, \quad k = 0,\ldots, n, \]
-    mit den Zahlen 
-    \[ \sigma_j := \begin{cases}
-        1, & j = 0\\
-        \frac{(-1)^j}{ \gamma_2 \gamma_3 \cdots \gamma_{n+1} }, & j = 1,\ldots, n.
-    \end{cases} \]
 \end{karte}
 
 \subsection*{Konvergenz Quadraturverfahren}
