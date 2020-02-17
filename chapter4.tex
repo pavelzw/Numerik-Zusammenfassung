@@ -148,3 +148,228 @@
     Die Cholesky-Zerlegung einer \( n\times n \)-Matrix benötigt ca. \( n^3/6 \) Multiplikationen 
     (zzgl. der Auswertung von \(n\) Quadratwurzeln). Somit ist sie stabil.
 \end{karte}
+
+\subsection*{QR-Faktorisierung}
+
+\begin{karte}{Householder-Reflexion}
+    Eine \( m\times m \)-Matrix der Form 
+    \[ H(v) := I_m - 2 \frac{ v v^T }{ v^T v } = I_m - 2 \frac{v v^T}{||v||_2^2} \]
+    heißt \textit{Householder-Reflexion}. Householder-Reflexionen sind orthogonal, 
+    denn 
+    \[ H(v)^T = H(v) \text{ und } H(v)H(v)^T = H(v)^2 = I_m. \]
+    Die Householder-Reflexion beschreibt eine Spiegelung an \( v^\bot \), es gilt 
+    \[ H(v)v = -v, \quad H(v)w = w \;\forall w\in \langle \set{v}\rangle^\bot. \]
+\end{karte}
+
+\begin{karte}{QR-Zerlegung mittels Householder-Reflexionen}
+    Zu jeder Matrix \( A\in \R^{m\times n} \) mit \( m \geq n \) und 
+    \( \rk(A) = n \) existiert eine QR-Zerlegung mit 
+    unitärem \( Q \in \R^{m\times m} \) und injektiver oberer Dreiecksmatrix 
+    \[ R = \begin{pmatrix}
+        r_{1,1} & \cdots r_{1,n} \\
+        & \ddots & \vdots \\
+        &&r_{n,n} \\
+        0 &\cdots &0
+    \end{pmatrix} \in \R^{m\times n}, \]
+    mit \( r_{i,i} \neq 0 \) für \( i = 1,\ldots, n \).
+    Zu jeder anderen QR-Zerlegung \( A = \tilde{Q}\tilde{R} \) von \(A\) 
+    existiert eine unitäre Diagonalmatrix \( S \) mit 
+    \( R = S\tilde{R} \) und \( Q = \tilde{Q} S^H \).
+    Der Algorithmus zur QR-Zerlegung mittels Householder-Reflexionen 
+    benötigt circa doppelt soviele Multiplikationen wie eine \(LR\)-Faktorisierung.
+\end{karte}
+
+\begin{karte}{QR-Zerlegung durch Householder-Reflexionen Verfahren Teil 1}
+    Schritt 1: Definiere \(Q_1 := H(a_1 - \alpha_1 e_1) \in \R^{m\times m} \) 
+    mit \( \alpha_1 = - \sign(a_{1,1}) ||a_1||_2 \neq 0 \).
+    Es folgt 
+    \[ A^{(2)} := Q_1 A = \left(\begin{array}{c|c|c|c}
+        \alpha_1 & & & \\
+        0 & a_2^{(2)} & \cdots & a_n^{(2)} \\
+        \vdots &&&
+    \end{array} \right), \]
+    wobei \( a_k^{(2)} := Q_1 a_k \).
+\end{karte}
+
+\begin{karte}{QR-Zerlegung durch Householder-Reflexionen Verfahren Teil 2}
+    Schritt \(k\) (\( 2 \leq k \leq p := \min\set{m-1, n} \)): 
+    Nach dem \( (k-1) \)-ten Schritt liegt die Matrix 
+    \( A^{(k)} \) vor mit der Struktur 
+    \[ A^{(k)} = \left( \begin{array}{ccccccc}
+        \ast & \cdots & \cdots & \cdots & \cdots & \cdots & \ast \\
+        0 & \ast & \cdots & \cdots & \cdots & \cdots & \ast \\
+        \vdots & 0 & \ddots & \vdots & & & \vdots \\
+        \vdots & \vdots & \ddots & \ast & \ast & \cdots & \ast \\
+        \vdots & \vdots & & 0 & & & \\
+        \vdots & \vdots & & \vdots & & \tilde{A}^{(k)} & \\
+        0 & 0 & \cdots & 0 & & &
+    \end{array}\right), \]
+    wobei \( \tilde{A}^{(k)} = (\tilde{a}_1^{(k)}, \ldots, \tilde{a}_{n-k+1}^{(k)}) \) 
+    eine injektive \( (m-k+1)\times (n-k+1) \)-Matrix ist.
+\end{karte}
+
+\begin{karte}{QR-Zerlegung durch Householder-Reflexionen Verfahren Teil 3}
+    Wir definieren die Householder-Reflexion \( Q_k := \left( \begin{array}{c|c}
+        I_{k-1} & 0 \\
+        \hline 
+        0 & H(\tilde{a}_1^{(k)} - \alpha_k e_1)
+    \end{array} \right) \), 
+    \(\alpha_k = - \sign(\tilde{a}_{1,1}^{(k)}) ||\tilde{a}_1^{(k)}||_2 \), 
+    die die erste Spalte von \( \tilde{A}^{(k)} \) auf ein Vielfaches von 
+    \( e_1 \in \R^{m-k+1} \) spiegelt, die restlichen Spalten von \( \tilde{A}^{(k)} \) 
+    transformiert, den Rest von \( A^{(k)} \) unverändert lässt.
+    Damit ist die komplette orthogonale Transformation von \( A \) auf eine obere Dreiecksmatrix 
+    \(R\) beschrieben. Wir haben 
+    \[ R = Q_p Q_{p-1} \cdots Q_1 A = A^{(p+1)}, \quad Q := Q_1^T \cdots Q_p^T, \quad A = QR. \]
+\end{karte}
+
+\begin{karte}{Givens-Rotation}
+    Eine \(m \times m\)-Matrix der Form 
+    \[ G(l,k) = \left( \begin{array}{ccccccccccc}
+        1 &&&&&&&&&& \\
+        &\ddots&&&&&&&&& \\
+        && 1 &&&&&&&& \\
+        &&& c &&&& s &&& \\
+        &&&& 1 &&&&&& \\
+        &&&&& \ddots &&&&& \\
+        &&&&&& 1 &&&& \\
+        &&& -s &&&& c &&& \\
+        &&&&&&&& 1 &&\\
+        &&&&&&&&& \ddots & \\
+        &&&&&&&&&& 1
+    \end{array} \right) \]
+    mit \( c^2 + s^2 = 1 \) und \( l < k\) heißt \textit{Givens-Rotation}. Für \( S \neq 0 \) 
+    unterscheidet sich eine Givens-Rotation \( G(l,k) \) in genau \( 4 \) Einträgen von der 
+    Einheitsmatrix \(I_m\). \( G_{l,l} = G_{k,k} = c \), \( G_{l,k} = -G_{k,l} = s \).
+    \( G \) ist orthogonal: \( G^T G = I_m \)
+\end{karte}
+
+\begin{karte}{Givens-Rotation Verfahren}
+    Es gibt ein \( \varphi \in (0,2\pi) \), sodass \( c = \cos(\varphi), s = \sin(\varphi) \) ist. 
+    \( G(l,k) \) beschreibt also eine Rotation um den Winkel \( \varphi \) in der Ebene 
+    \( \langle \set{e_l, e_k } \rangle \).
+    Wähle \( c \) und \(s\) so, dass die \(k\)-te Komponente von \(x\) zu null wird. Falls \( x_l^2 + x_k^2 \neq 0 \), 
+    so erreichen wir 
+    \[ \begin{pmatrix}
+        c & s \\ -s & c
+    \end{pmatrix} \begin{pmatrix}
+        x_l \\ x_k
+    \end{pmatrix} \overset{!}{=} \begin{pmatrix}
+        r \\ 0
+    \end{pmatrix} \]
+    durch die Setzungen 
+    \[ r := \pm \sqrt{x_l^2 + x_k^2}, \quad c := \frac{x_l}{r}, \quad s := \frac{x_k}{r}. \]
+    Mithilfe der Givens-Rotation kann man nun eine Matrix skuzessive in eine obere 
+    Dreiecksgestalt bringen, indem man pro Spalte (von links nach rechts) immer 
+    von unten nach oben die Einträge der Matrix eliminiert.
+    Durch den letzten Schritt kommen wir auf \(R\) und \( Q = Q_1^T \cdots Q_p^T \), 
+    wobei \(Q_i\) die Givens-Rotation aus dem \(i\)-ten Schritt ist.
+\end{karte}
+
+\begin{karte}{Überlaufvermeidung Givens-Rotation}
+    Wenn \( x_l \) und \( x_k \) betragsmäßig sehr groß sind, kann man durch 
+    \begin{align*}
+        \abs{x_l} > \abs{x_k}: \quad &\tau := \frac{x_k}{x_l}, & c:= \frac{1}{\sqrt{1 + \tau^2}}, \quad &s := c\tau, \\
+        \abs{x_l} \leq \abs{x_k}: \quad &\tau := \frac{x_l}{x_k}, & s := \frac{1}{\sqrt{1 + \tau^2}}, \quad &c := s\tau
+    \end{align*}
+    einen Überlauf verhindern.
+\end{karte}
+
+\begin{karte}{Givens-Rotation Aufwandsschätzung}
+    Die Berechnung der QR-Faktorisierung einer vollbesetzten Matrix benötigt etwa 
+    \( \frac{4}{3} n^3\) Multiplikationen für \( m \approx n \) und \( 2mn^2 \) 
+    für \( m \gg n \).
+\end{karte}
+
+\subsection*{Lineare Ausgleichsprobleme}
+
+\begin{karte}{Lineares Ausgleichsproblem}
+    Durch den \textit{Gauß-Ausgleich} wird der Lösungsbegriff für 
+    lineare Systeme \( Au \overset{!}{=} b \) sinnvoll verallgemeinert: 
+    \[ \text{Finde } u^* \in \R^n: \quad ||Au^* - b||_2 = \min_{u\in\R^n} ||Au - b||_2. \]
+    Das \textit{lineare Ausgleichsproblem} heißt \textit{überbestimmt}, falls \( m > n \) und 
+    \textit{unterbestimmt}, falls \( m < n \).
+
+    Hierbei ist äquivalent: 
+    \begin{itemize}
+        \item \( u^* \) löst das Ausgleichsproblem,
+        \item \( u^* \) löst die Normalgleichung: \( A^T A u^* = A^T b \),
+        \item \( u^* \) erfüllt \( A u^* = P_A b \), wobei \( \abb{P_A}{\R^m}{\R^m} \) 
+        der Orthogonalprojektor (bez. \( \langle \cdot, \cdot\rangle \)) auf das Bild von \(A\) ist.
+    \end{itemize}
+
+    Das relative Residuum ist definiert durch 
+    \[ \frac{ ||A u - b||_2 }{||b||_2} \]
+\end{karte}
+
+\begin{karte}{Differenz zweier Optimallösungen}
+    Die Differenz \( u^* - v^* \) zweier Lösungen eines linearen Ausgleichsproblems 
+    liegt in \( \ker(A) \): \( A(u^* - v^*) = 0 \). Das Ausgleichsproblem hat genau dann 
+    eine eindeutige Lösung, wenn \( \ker(A) = \set{0} \). Dies kann im unterbestimmten 
+    Fall nie und im überbestimmten Fall nur für \( n = \rk(A) \) eintreten.
+\end{karte}
+
+\begin{karte}{Minimum-Norm-Lösung}
+    Unter allen Lösungen eines linearen Ausgleichsproblems nennen wir diejenige mit 
+    minimaler euklidischer Norm die \textit{Minimum-Norm-Lösung} (MNL) \(u^+\).
+
+    Dei MNL \(u^+\) ist die eindeutige Lösung der Normalgleichung in 
+    \( \ker(A)^\bot \). Hat \(A\) Maximalrang, \( \rk(A) = \min\set{m,n} \), dann gilt 
+    \[ u^+ = \begin{cases}
+        (A^T A)^{-1} A^T b, & m \geq n, \\
+        A^T (A A^T)^{-1} b, & m < n.
+    \end{cases} \]
+\end{karte}
+
+\begin{karte}{Pseudoinverse einer Matrix und Kondition einer Matrix}
+    Die Matrix \( A^+ \in \R^{n\times m} \), die jedem \( b\in \R^m \) die 
+    MNL \(u^+\) des Ausgleichsproblems zuordnet, heißt 
+    \textit{verallgemeinerte Inverse} oder \textit{Pseudoinverse} von \(A \in\R^{m\times n}\).
+    Die Kondition von \(A\) ist definiert durch 
+    \[ \kappa(A) := ||A|| \; ||A^+||. \]
+    Ist \(A\) eine invertierbare quadratische Matrix, so gilt \( A^+ = A^{-1} \).
+\end{karte}
+
+\begin{karte}{Wedin (1973)}
+    Es seien \(A, \Delta A \in \R^{m \times n}\) mit \( \rk(A) = \rk(A + \Delta A) \)
+    und \( ||\Delta A||_2 \leq \delta ||A||_2 \), sowie \( b, \Delta b \in \R^m \) 
+    mit \( ||\Delta b||_2 \leq \delta ||b||_2 \). Unter der Voraussetzung \( \kappa_2(A)\delta < 1 \) gilt 
+    \[ \frac{ ||u^+ - v^+ ||_2 }{ ||u^+||_2 } \leq \frac{ \kappa_2(A)\delta }{ 1 - \kappa_2(A)\delta }
+    \left( 2 + (\kappa_2(A) + 1)\frac{ ||Au^+ - b||_2 }{ ||A||_2||u^+||_2 } \right), \]
+    mit der Notation \( u^+ = A^+ b \) und \( v^+ = (A + \Delta A)^+ (b + \Delta b) \). 
+    Die Abschätzung ist annähernd scharf.
+\end{karte}
+
+\begin{karte}{Singulärwertzerlegung}
+    Sei \( A \in \R^{m\times n} \) mit \(r = \rk(A) \leq \min\set{m,n}\). Dann existiert 
+    eine Faktorisierung 
+    \[ A = USV^T, \]
+    wobei \( U \in \R^{m\times m} \), sowie \( V \in \R^{n\times n} \) orthogonale Matrizen 
+    sind und \( S \in \R^{m\times n} \) eine Diagonalmatrix ist: 
+    \[ S = \begin{pmatrix}
+        \Sigma & 0 \\ 0 & 0
+    \end{pmatrix}, \Sigma = \diag(\sigma_1, \ldots, \sigma_r) \in \R^{r\times r}, 
+    \sigma_1 \geq \cdots \geq \sigma_r > 0. \]
+    Darüber hinaus gelten \( A^+ = V S^+ U^T \) mit 
+    \[ S^+ = \begin{pmatrix}
+        \Sigma^+ & 0 \\ 0 & 0
+    \end{pmatrix} \in \R^{n\times m}, \Sigma^+ = \diag(\frac{1}{\sigma_1}, \ldots, \frac{1}{\sigma_r}) \in \R^{r\times r}, \]
+    sowie \( \kappa_2(A) = \frac{\sigma_1}{\sigma_r} \). Die Faktorisierung heißt 
+    \textit{Singulärwertzerlegung} von \(A\). Die Spaltenvektoren \( u_i \) und \(v_j\)
+    von \(U\) bzw. \(V\) heißen \textit{singuläre Vektoren} und die \( \sigma_k \) heißen 
+    \textit{Singulärwerte} von \(A\). Es gilt 
+    \[ Ax = \sum_{i=1}^r \sigma_i \langle x, v_i\rangle u_i \quad 
+    A^+y = \sum_{j=1}^r \sigma_j^{-1}\langle y, u_j \rangle v_j. \]
+\end{karte}
+
+\begin{karte}{Berechnung der Singulärwertzerlegung}
+    Seien \( \lambda_1, \ldots, \lambda_n \) die Eigenwerte von \( A^T A \)
+    und \( \lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_r > 0 \) und 
+    \( \lambda_{r+1} = \cdots = \lambda_n = 0 \). Es seien \( v_1,\ldots, v_n \) 
+    die zugehörigen Eigenvektoren. Wir definieren 
+    \[ \sigma_i := \sqrt{\lambda_i} \quad u_i := \frac{1}{\sigma_i} A v_i \;1\leq i \leq r. \]
+    Seien \( u_j \) mit \( m \leq j > r \) weitere Orthonormalbasisvektoren.
+
+    Dann bilden \( V = (v_1, \ldots, v_n) \), \(S\) wie im Satz definiert 
+    und \( U = (u_1, \ldots, u_m) \) die Singulärwertzerlegung von \(A\).
+\end{karte}
