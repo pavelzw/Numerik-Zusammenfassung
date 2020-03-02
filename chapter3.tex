@@ -85,7 +85,7 @@
     nach zu ordnen und in dieser Reihenfolge zu summieren.
     
     Eine worst case Fehlerabschätzung ergibt sich durch 
-    \[ \abs{ \tilde{S}(x) - S(x) } \leq \gamma_n \sum_{k=1}^n \abs{x_k} \]
+    \[ \abs{ \tilde{S}(x) - S(x) } \leq \gamma_n \sum_{k=1}^n \abs{x_k}. \]
 \end{karte}
 
 \begin{karte}{Fehlerfaktoren bei Summation Teil 2}
@@ -113,7 +113,7 @@
 
 \begin{karte}{Häufig verwendete Normen}
     \( p \)-Normen:
-    \[ ||v||_p := \left( \sum_{k=1}^n \abs{v_k}^p \right)^{1/p}. \]
+    \[ ||v||_p := \left( \sum_{k=1}^n \abs{v_k}^p \right)^{1/p} \]
     \( p = 2 \) ist die \textit{Euklidische Norm}.
 
     \( p = \infty \) Maximumsnorm
@@ -145,18 +145,18 @@
     Die durch die jeweilige \(p\)-Normen induzierte Norm nennt sich Matrix-\(p\)-Norm.
     
     \( p=1 \) (Spaltensummennorm): 
-    \[ ||A||_1 = \max_{j\in[n]} ||a_j||_1 = \max_{j\in[n]} \sum_{i=1}^m |a_{i,j},  \]
+    \[ ||A||_1 = \max_{j\in[n]} ||a_j||_1 = \max_{j\in[n]} \sum_{i=1}^m |a_{i,j}|,  \]
     wobei \( a_j \) die \(j\)-te Spalte von \(A\) ist.
 
     \( p=2 \) (Spektralnorm):
     \[ ||A||_2 = \sqrt{\lambda_{\max}(A^H A)}, \]
-    wobei \( \lambda_{\max}(A^H A) \) der größte Eigenwert von \( A^H A \) ist.
+    wobei \( \lambda_{\max}(A^H A) \) der größte Eigenwert von \( A^H A \) ist.\\
     Es gilt 
-    %todo\[ ||A||_2 = ||A^H||_2, \quad ||A^H A||_2 = ||A||_^2, \quad ||QA||_2 = ||A||_2 \text{ für alle unitären } Q. \]
+    \( ||A||_2 = ||A^H||_2, \quad ||A^H A||_2 = ||A||_2, \quad ||QA||_2 = ||A||_2 \) für alle unitären  \(Q\). 
 
     \( p=\infty \) (Zeilensummennorm):
     Es gilt 
-    \[ ||A||_\infty = \max_{i\in[m]} \sum_{j=}^m \abs{a_{i,j}}. \]
+    \[ ||A||_\infty = \max_{i\in[m]} \sum_{j=1}^m \abs{a_{i,j}}. \]
 \end{karte}
 
 \begin{karte}{Kondition einer Matrix}
@@ -171,7 +171,7 @@
 \begin{karte}{Minimaler Abstand zu einer singulären Matrix}
     Sei \( A \in \K^{n\times n} \) regulär und \( 1 \leq p \leq \infty \). 
     Dann gilt 
-    \[ \min \set{ \frac{||A-S||_p}{||A||_p} \; | \; S \in \K^{n\times n} \text{ singulär} } = \frac{1}{\kappa_p(A)}. \]
+    \[ \min \left\{ \frac{||A-S||_p}{||A||_p} \; | \; S \in \K^{n\times n} \text{ singulär} \right\} = \frac{1}{\kappa_p(A)}. \]
     Das heißt je größer die Kondition einer Matrix ist, desto näher liegt sie an einer singulären 
     (nicht invertierbaren) Matrix.
 \end{karte}
@@ -230,6 +230,8 @@
     Für jedes Element \( x^\varepsilon \) mit relativem Abstand \(\varepsilon\) zu \(x\) darf der relative 
     Fehler von \( \tilde{f}(x^\varepsilon) \) zu \( f(x^\varepsilon) \) im wesentlichen nicht größer sein als 
     \( \sigma \kappa_f(x^\varepsilon)\varepsilon \).
+    Einen Algorithmus \( \tilde{f} \) nennen wir \textit{stabil im Sinne der Vorwärtsanalyse}, falls der Stabilitätsindikator \( \sigma \) kleiner 
+    gleich der Anzahl ausgeführter Elementaroperationen ist.
 \end{karte}
 
 \begin{karte}{Rückwärtsanalyse}

@@ -62,6 +62,22 @@
 
 	Nach Vollendung des Schemas hat man \( P_{n,n} = P(f|t_0,\ldots,t_n)(t) \)
 	als Ergebnis.
+
+	Alternativ: \( q_{i,j} = P(f|t_i,\ldots, t_j) \in \Pi_{j-i} \).
+	\[ \frac{ (x- x_j)q_{i,j-1} - (x - x_i) q_{i+1, j} }{(x_i - x_j)}. \]
+\end{karte}
+
+\begin{karte}{Newton-Schema}
+	Bei der Newton-Interpolation bestimmt man das Interpolationspolynom 
+	\( p \) zu einer Funktion \( \abb{f}{\R}{\R} \) und \(n\) Stützstellen
+	\( x_0,\ldots, x_n \) durch den Ansatz 
+	\[ p(x) = \sum_{k=0}^n f[x_0, \ldots, x_k](x - x_0)\cdots (x - x_{k-1}). \]
+	Die sogenannten \textit{dividierten Differenzen} \( f[x_0,\ldots, x_k] \)
+	sind dabei durch 
+	\[ f[x_i] := f(x_i) \] 
+	und durch 
+	\[ f[x_i,\ldots, x_j] := \frac{ f[x_i,\ldots, x_{j-1}] - f[x_{i+1}, \ldots, x_j] }{ x_i - x_j } \]
+	rekursiv definiert.
 \end{karte}
 
 \begin{karte}{Fehlerapproximation Interpolationspolynom}
@@ -73,14 +89,14 @@
 	\[ \omega_{n+1}(t) := \prod_{i=0}^n (t - t_i). \]
 
 	Wir haben mit \( ||\omega_{n+1}||_\infty := \max_{t\in (a,b)} | \omega_{n+1}(t)| \)
-	\[ || f - P(f|t_0,\ldots, t_n) || \sup_{\tau \in [a,b]} \frac{ |f^{(n+1)}(\tau)| }{ (n+1)! } ||\omega_{n+1}||_\infty. \]
+	\[ || f - P(f|t_0,\ldots, t_n) || \leq \sup_{\tau \in [a,b]} \frac{ |f^{(n+1)}(\tau)| }{ (n+1)! } ||\omega_{n+1}||_\infty. \]
 \end{karte}
 
 \begin{karte}{Tschebyscheff-Knoten}
 	Das Minimum \( \min\set{|| \omega_{n+1}||_\infty \;|\; t_0, \ldots, t_n \in [a,b] } \)
 	wird für die \textit{Tschebyscheff-Knoten} bezüglich \([a,b]\) angenommen.
 	Diese sind gegeben durch
-	\[ t_i^{[a,b]} =) \frac{b+a}{2} + \frac{b-a}{2} \cos\left( \frac{2i + 1}{2n + 2} \pi \right). \]
+	\[ t_i^{[a,b]} = \frac{b+a}{2} + \frac{b-a}{2} \cos\left( \frac{2i + 1}{2n + 2} \pi \right). \]
 \end{karte}
 
 \begin{karte}{Satz von Faber}
@@ -132,10 +148,10 @@
 \begin{karte}{Krümmung einer Funktion}
 	Die Krümmung einer Funktion \( \abb{y}{[a,b]}{\R}, y\in \mathcal{C}^2([a,b]) \) 
 	ist gegeben durch 
-	\[ \kappa(t) := \frac{y''(t)}{ (1 + y'(t))^{3/2} }. \]
+	\[ \kappa(t) := \frac{y''(t)}{ (1 + y'(t)^2)^{3/2} }. \]
 
 	Die \( ||\cdot ||_2 \)-Norm von \( y'' \) ist gegeben durch 
-	\[ ||y''||_2 = (\int_a^b y''(t) \dx{t})^{1/2} \]
+	\[ ||y''||_2 = (\int_a^b y''(t)^2 \dx{t})^{1/2}. \]
 \end{karte}
 
 \begin{karte}{Splines minimaler Krümmung}

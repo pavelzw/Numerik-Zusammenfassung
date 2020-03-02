@@ -42,15 +42,15 @@
     \[ \sum_{i=0}^n \lambda_i = 1. \]
     Dabei ist \( t_0 \neq a \) und \( t_n \neq b \) möglich.
 
-    Es gilt \( \widehat{I}(1) = b-1 \) und \( \widehat{I} \) ist positiv \( \Leftrightarrow \lambda_i \geq 0, i = 0,\ldots, n \).
+    Es gilt \( \widehat{I}(1) = b-a \) und \( \widehat{I} \) ist positiv \( \Leftrightarrow \lambda_i \geq 0, i = 0,\ldots, n \).
 \end{karte}
 
 \begin{karte}{Konstruktion von Quadraturformeln}
     Approximiere \(f\) druch eine Linearkombination einfach integrierbarer Funktionen. 
     Dazu sei \(f\) an den Stellen \( t_i \) bekannt. Wir setzen 
-    \[ \tilde{f}(t) := \sum_{i=0}^n f(t_i p_i(t)) \]
+    \[ \tilde{f}(t) := \sum_{i=0}^n f(t_i) p_i(t) \]
     an, wobei \( p_i \) bekannte Stammfunktionen besitzen. Wir setzen 
-    \[ \widehat{I}(f) := I(\tilde{f}) = (b-a)\sum_{i=0}^n f(t_i) \frac{I(p_i)}{b-a}. \]
+    \[ \widehat{I}(f) := I(\tilde{f}) = \sum_{i=0}^n f(t_i) I(p_i). \]
     
     Je besser \(\tilde{f}\) den Integranden \(f\) approximiert, desto genauer wird \( I(f) \) 
     durch \( \widehat{I}(f) \) angenähert.
@@ -73,6 +73,7 @@
 
     Hier gilt für die Gewichte 
     \[ \lambda_{n,i} = \frac{1}{n} \int_0^n \prod_{\substack{j=0\\j\neq i}}^n \frac{s-j}{i-j} \dx{s} \in \Q. \]
+    Es gilt \( \lambda_{n,i} = \lambda_{n,n-i} \) und \( \sum_{i=0}^n \lambda_{n,i} = 1 \).
 
     Es gilt für die ersten vier Newton-Cotes-Formeln 
     \begin{center}
@@ -178,8 +179,9 @@
 
 \begin{karte}{Fehlerabschätzung Gauß-Quadratur}
     Sei \( f \in \mathcal{C}^{2n+2}([a,b]) \). Dann existiert ein \( \tau \in (a,b) \), 
-    sodass gil t
-    \[ \int_a^b f(t) w(t) \dx{t} - \widehat{I_n}(f) = || p_{n+1} ||_w^2 \frac{ f^{(2n+2)}(\tau) }{ (2n+2)! }. \]
+    sodass gilt
+    \[ \int_a^b f(t) w(t) \dx{t} - \widehat{I_n}(f) = || p_{n+1} ||_w^2 \frac{ f^{(2n+2)}(\tau) }{ (2n+2)! }.,\]
+    wobei \( p_{n+1} \) das Orthogonalpolynom mit führenden \(1\)-Koeffizienten ist.
 \end{karte}
 
 \begin{karte}{Gauß-Legendre-Quadratur}
@@ -189,6 +191,9 @@
     Durch Transformation (\( x = a + \frac{1+t}{2}(b-a) \)) erhalten wir eine Quadraturformel für ein beliebiges endliches 
     Intervall \( [a,b], -\infty < a < b < \infty \). 
     \[ \int_a^b f(x) \dx{x} = \frac{b-a}{2} \int_{-1}^1 f\left( a + \frac{ 1+t }{2}(b-a) \right) \dx{t}. \]
+
+    Eine Formel für das \(k\)-te Legendre-Polynom ist 
+    \[ p_k = \frac{1}{2^n n!} \frac{\mathrm{d}^n}{\mathrm{d}x^n} (x^2 - 1)^n. \]
 \end{karte}
 
 \begin{karte}{Gebräuchliche Systeme von Orthogonalpolynomen}

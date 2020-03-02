@@ -17,7 +17,7 @@
 \end{karte}
 
 \begin{karte}{Rückwärtssubstitution/Vorwärtssubstitution}
-    Sei \( R \) eine obere Dreiecksmatrix, gesucht ist \(x\) in \( Rx = z \).
+    Sei \( R \) eine obere Dreiecksmatrix, gesucht ist \(x\) in \( Rx = z \).\\
     Durch \textit{Rückwärtssubstitution} bekommen wir \(x\):
     \begin{align*}
         x_n &= z_n / r_{n,n}, \\
@@ -366,9 +366,9 @@
     Seien \( \lambda_1, \ldots, \lambda_n \) die Eigenwerte von \( A^T A \)
     und \( \lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_r > 0 \) und 
     \( \lambda_{r+1} = \cdots = \lambda_n = 0 \). Es seien \( v_1,\ldots, v_n \) 
-    die zugehörigen Eigenvektoren. Wir definieren 
+    die zugehörige ONB aus Eigenvektoren. Wir definieren 
     \[ \sigma_i := \sqrt{\lambda_i} \quad u_i := \frac{1}{\sigma_i} A v_i \;1\leq i \leq r. \]
-    Seien \( u_j \) mit \( m \leq j > r \) weitere Orthonormalbasisvektoren.
+    Seien \( u_j \) mit \( r < j \leq m \) weitere Orthonormalbasisvektoren.
 
     Dann bilden \( V = (v_1, \ldots, v_n) \), \(S\) wie im Satz definiert 
     und \( U = (u_1, \ldots, u_m) \) die Singulärwertzerlegung von \(A\).
